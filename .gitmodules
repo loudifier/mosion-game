@@ -1,0 +1,3 @@
+[submodule "Virtual-Joystick-Godot"]
+	path = Virtual-Joystick-Godot
+	url = https://github.com/loudifier/Virtual-Joystick-Godot.git

@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4c45w00dfobl"]
+
+[ext_resource type="Script" path="res://circle.gd" id="1_5ftsg"]
+[ext_resource type="Texture2D" uid="uid://btopc8eo1atpl" path="res://circle_100x100_white.svg" id="2_uttlb"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kwcaf"]
+radius = 50.0
+
+[node name="Circle" type="Area2D"]
+script = ExtResource("1_5ftsg")
+
+[node name="Fill" type="Sprite2D" parent="."]
+texture = ExtResource("2_uttlb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_kwcaf")
