@@ -4,6 +4,13 @@ var velocity = Vector2.ZERO
 @export var radius = 50.0
 var base_radius = 378/2 # size of the sprite
 
+@export var color = Color.WHITE
+
+# if fade_status is set to a falsy value no fade will be applied in _process()
+# if fade_status=='in' the circle will fade in
+# if set to a truthy value other than 'in' the circle will fade out
+var fade_status = null
+var fade_time = 0
 
 var absorbable = false
 @export var growth_factor = 1.0
@@ -22,6 +29,15 @@ func _process(delta):
 			# collision detection seems to be off by 1 frame. Probably a better way to handle it, but performing a collision sanity check works
 			if position.distance_to(area.position) < (radius + area.radius):
 				absorb(area)
+	
+	if fade_status:
+		if fade_status=='in':
+			color.a = min(color.a + delta/fade_time, 1)
+		else:
+			color.a = max(color.a - delta/fade_time, 0)
+		set_modulate(color)
+		if color.a==0 or color.a==1:
+			fade_status=null
 
 func absorb(enemy):
 	# when another circle (enemy) collides with this node either absorb or get absorbed by the enemy
@@ -48,3 +64,13 @@ func get_area():
 	
 func set_area(_area):
 	set_radius(sqrt(_area/PI))
+	
+func fade_in(fade_length):
+	color.a = 0
+	fade_status = 'in'
+	fade_time = fade_length
+	
+func fade_out(fade_length):
+	color.a = 1
+	fade_status = 'out'
+	fade_time = fade_length

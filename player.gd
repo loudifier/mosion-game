@@ -7,10 +7,10 @@ extends "res://circle.gd"
 
 
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	super._ready()
-	radius = 10
 	growth_factor = 0.1
 
 
@@ -52,3 +52,4 @@ func start(start_position, starting_radius = 50.0):
 	set_radius(starting_radius)
 	visible = true
 	absorbable = true
+	fade_in(2.0)

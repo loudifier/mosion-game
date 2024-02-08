@@ -11,7 +11,7 @@ var screen_size
 func _ready():
 	screen_size = get_viewport_rect().size
 	max_mob_radius = min(screen_size.x, screen_size.y) / 8
-	$StartButton.position = screen_size/2
+	#$StartButton.position = screen_size/2
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -22,16 +22,18 @@ func _process(delta):
 
 func game_over():
 	$UI.visible = false
-	$StartButton.visible = true
+	$HUD/StartButton.visible = true
 
 func new_game():
 	$Player.start(screen_size/2, starting_size)
 	$MobTimer.start()
 	$UI.visible = true
+	get_tree().call_group('mobs', 'fade_delete')
 	
 
 func _on_start_button_pressed():
-	$StartButton.visible = false
+	$HUD/StartButton.visible = false
+	$HUD/ScoreLabel.visible = true
 	new_game()
 
 
@@ -68,8 +70,6 @@ func randf_weighted(bias_value, weight=2):
 		return bias_value + unscaled
 	
 func randf_range_weighted(from, to, bias_value, weight=2):
-	# generates a random number from 0-1 with a probability distribution more likely to return a number close to bias_value
-	# coefficients determined experimentally using Excel, there is definitely a better mthod out there
 	var value_range = to - from
 	var bias_ratio = (bias_value - from) / value_range
 	return randf_weighted(bias_ratio, weight) * value_range + from
