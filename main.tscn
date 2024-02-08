@@ -1,17 +1,45 @@
-[gd_scene load_steps=7 format=3 uid="uid://c8u678fwyef7c"]
+[gd_scene load_steps=13 format=3 uid="uid://c8u678fwyef7c"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_efij6"]
 [ext_resource type="PackedScene" uid="uid://coqor2877ks5l" path="res://player.tscn" id="2_nphoj"]
 [ext_resource type="PackedScene" uid="uid://dmghftj3kythu" path="res://mob.tscn" id="3_bcq41"]
 [ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://joystick/virtual_joystick.tscn" id="4_7titn"]
-[ext_resource type="FontFile" uid="uid://ben22lqt3cxoa" path="res://font/AveriaSerifLibre-Regular.ttf" id="5_1iigb"]
+[ext_resource type="Theme" uid="uid://ddc5jc2skuwd8" path="res://font/averia.tres" id="5_yr6rn"]
+[ext_resource type="FontFile" uid="uid://mnjqkc54yerk" path="res://font/AveriaSerifLibre-Bold.ttf" id="6_k03yo"]
+[ext_resource type="Texture2D" uid="uid://gyd7vhxpyq4b" path="res://speaker.svg" id="7_2jboq"]
+[ext_resource type="Texture2D" uid="uid://db0kp35d4jsdp" path="res://speaker-mute.svg" id="8_ffcqt"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_h3xal"]
-font = ExtResource("5_1iigb")
-font_size = 48
+[sub_resource type="LabelSettings" id="LabelSettings_gm1r5"]
+font = ExtResource("6_k03yo")
+font_size = 64
 outline_size = 5
-outline_color = Color(0.4, 0.4, 0.4, 1)
-shadow_size = 0
+outline_color = Color(1, 1, 1, 0.25098)
+shadow_size = 10
+shadow_color = Color(1, 1, 1, 0.25098)
+shadow_offset = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_q6ifl"]
+font = ExtResource("6_k03yo")
+font_size = 128
+outline_size = 5
+outline_color = Color(1, 1, 1, 0.12549)
+shadow_size = 10
+shadow_color = Color(1, 1, 1, 0.12549)
+shadow_offset = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_w07ay"]
+font = ExtResource("6_k03yo")
+font_size = 128
+outline_size = 15
+outline_color = Color(1, 1, 1, 0.0627451)
+shadow_size = 20
+shadow_color = Color(1, 1, 1, 0.0627451)
+shadow_offset = Vector2(0, 0)
+
+[sub_resource type="Environment" id="Environment_6pe36"]
+background_mode = 3
+glow_enabled = true
+glow_hdr_threshold = 0.8
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_efij6")
@@ -22,9 +50,10 @@ visible = false
 
 [node name="MobTimer" type="Timer" parent="."]
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="."]
+visible = false
 
-[node name="VirtualJoystick" parent="UI" instance=ExtResource("4_7titn")]
+[node name="VirtualJoystick" parent="HUD" instance=ExtResource("4_7titn")]
 visible = false
 offset_top = -1080.0
 offset_right = 3840.0
@@ -33,36 +62,104 @@ deadzone_size = 20.0
 clampzone_size = 100.0
 joystick_mode = 1
 
-[node name="HUD" type="CanvasLayer" parent="."]
-
 [node name="ScoreLabel" type="Label" parent="HUD"]
-visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -650.0
 offset_top = 64.0
 offset_right = 650.0
-offset_bottom = 101.0
+offset_bottom = 137.0
 grow_horizontal = 2
 text = "0"
-label_settings = SubResource("LabelSettings_h3xal")
+label_settings = SubResource("LabelSettings_gm1r5")
 horizontal_alignment = 1
 
-[node name="StartButton" type="Button" parent="HUD"]
-z_index = 1
+[node name="TitleScreen" type="CanvasLayer" parent="."]
+
+[node name="StartButton" type="Button" parent="TitleScreen"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -50.0
-offset_top = -25.0
-offset_right = 50.0
-offset_bottom = 25.0
+offset_left = -290.0
+offset_top = 73.0
+offset_right = -136.0
+offset_bottom = 127.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "START"
+theme = ExtResource("5_yr6rn")
+text = "start	"
+alignment = 0
+
+[node name="Title" type="Label" parent="TitleScreen"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -273.0
+offset_right = 300.0
+offset_bottom = -128.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "mosion"
+label_settings = SubResource("LabelSettings_q6ifl")
+
+[node name="ExtraGlow" type="Label" parent="TitleScreen/Title"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -72.5
+offset_right = 300.0
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "mosion"
+label_settings = SubResource("LabelSettings_w07ay")
+
+[node name="OptionsButton" type="Button" parent="TitleScreen"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -27.0
+offset_right = -120.0
+offset_bottom = 27.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "options	"
+alignment = 0
+
+[node name="MuteButton" type="TextureButton" parent="TitleScreen"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -230.0
+offset_top = -210.0
+offset_right = 570.0
+offset_bottom = 590.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.2, 0.2)
+toggle_mode = true
+texture_normal = ExtResource("7_2jboq")
+texture_pressed = ExtResource("8_ffcqt")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6pe36")
 
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
-[connection signal="pressed" from="HUD/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="TitleScreen/StartButton" to="." method="new_game"]
+[connection signal="pressed" from="TitleScreen/OptionsButton" to="." method="_on_options_button_pressed"]

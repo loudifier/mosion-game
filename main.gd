@@ -21,22 +21,18 @@ func _process(delta):
 
 
 func game_over():
-	$UI.visible = false
-	$HUD/StartButton.visible = true
+	$HUD.visible = false
+	#$GameOver.visible = true
 
 func new_game():
 	$Player.start(screen_size/2, starting_size)
 	$MobTimer.start()
-	$UI.visible = true
+	$HUD.visible = true
+	$TitleScreen.visible = false
 	get_tree().call_group('mobs', 'fade_delete')
 	
-
-func _on_start_button_pressed():
-	$HUD/StartButton.visible = false
-	$HUD/ScoreLabel.visible = true
-	new_game()
-
-
+	
+	
 func _on_mob_timer_timeout():
 	# create a new mob instance
 	var mob = mob_scene.instantiate()
@@ -76,3 +72,7 @@ func randf_range_weighted(from, to, bias_value, weight=2):
 
 func randf_new_mob_radius():
 	return randf_range_weighted(min_mob_radius, max_mob_radius, $Player.radius/2, 2)
+
+
+func _on_options_button_pressed():
+	pass # Replace with function body.

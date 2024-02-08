@@ -1,0 +1,27 @@
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://ddc5jc2skuwd8"]
+
+[ext_resource type="FontFile" uid="uid://mnjqkc54yerk" path="res://font/AveriaSerifLibre-Bold.ttf" id="1_m5aea"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7pjeq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tixvt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5spp0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0de8v"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bft0e"]
+
+[resource]
+default_font = ExtResource("1_m5aea")
+default_font_size = 48
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_outline_color = Color(1, 1, 1, 0.25098)
+Button/colors/font_pressed_color = Color(1, 1, 1, 1)
+Button/constants/outline_size = 5
+Button/styles/disabled = SubResource("StyleBoxEmpty_7pjeq")
+Button/styles/focus = SubResource("StyleBoxEmpty_tixvt")
+Button/styles/hover = SubResource("StyleBoxEmpty_5spp0")
+Button/styles/normal = SubResource("StyleBoxEmpty_0de8v")
+Button/styles/pressed = SubResource("StyleBoxEmpty_bft0e")
