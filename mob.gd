@@ -65,7 +65,7 @@ func fade_delete():
 func absorb(enemy):
 	if delete_on_fade_out:
 		if enemy.is_in_group('mobs') and enemy.delete_on_fade_out:
-			# if being deleted, only absorb enemy if it is also being deleted
+			# if being deleted, only absorb enemy if mob is also being deleted
 			super.absorb(enemy)
 	else:
 		# if not being deleted, process regular absorb

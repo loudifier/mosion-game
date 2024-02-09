@@ -7,26 +7,47 @@ var screen_size
 @export var min_mob_radius = 5
 @export var max_mob_radius = 540 # placeholder value assuming 1080p, updated in _ready()
 
+var ColorScale = load("res://ColorScale.gd")
+var color_scale = ColorScale.new()
+
+enum states {
+	STOP,
+	PLAY,
+	PAUSE
+}
+var play_state = states.STOP
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$TitleScreen.visible = true
+	$HUD.visible = false
+	$Options.visible = false
+	$Pause.visible = false
+	
 	screen_size = get_viewport_rect().size
 	max_mob_radius = min(screen_size.x, screen_size.y) / 8
-	#$StartButton.position = screen_size/2
+	
+	color_scale.set_theme(color_scale.themes.EMOSIONAL)
+	color_scale.scale_range = [min_mob_radius, 2*max_mob_radius]
+	$Background.color = color_scale.background_color
+	
+	$MobTimer.start()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if not $Player.radius:
-		game_over()
+	pass
 
 
 func game_over():
+	play_state = states.STOP
 	$HUD.visible = false
 	#$GameOver.visible = true
+	$TitleScreen.visible = true
 
 func new_game():
+	play_state = states.PLAY
 	$Player.start(screen_size/2, starting_size)
-	$MobTimer.start()
 	$HUD.visible = true
 	$TitleScreen.visible = false
 	get_tree().call_group('mobs', 'fade_delete')
@@ -75,4 +96,57 @@ func randf_new_mob_radius():
 
 
 func _on_options_button_pressed():
+	$TitleScreen.visible = false
+	$Pause.visible = false
+	$Options.visible = true
+	
+
+# change background color based on game values, with tweaks to HLS
+# using fixed background color, but may come in handy later
+func update_background(color_value):
+	var background_color = color_scale.get_color(color_value)
+	var background_hls = color_scale.rgb_to_hls(background_color[0],background_color[1],background_color[2])
+	#background_hls[0] += 0.5 # get complementary color
+	background_hls[1] = 0.2
+	background_hls[2] = 0.2
+	var background_rgb = color_scale.hls_to_rgb(background_hls[0],background_hls[1],background_hls[2])
+	$Background.color = Color(background_rgb[0],background_rgb[1],background_rgb[2])
+
+
+func _on_mute_button_toggled(toggled_on):
 	pass # Replace with function body.
+
+
+func _on_theme_button_pressed():
+	var num_themes = len(color_scale.themes)
+	for theme in color_scale.themes:
+		if color_scale.current_theme == color_scale.themes[theme]:
+			color_scale.set_theme((color_scale.themes[theme]+1)%num_themes)
+			break
+			
+	$Options/ThemeButton.text = color_scale.theme_name
+	$Background.color = color_scale.background_color
+	$Player.update_color()
+	get_tree().call_group('mobs', 'update_color')
+
+
+func _on_back_button_pressed():
+	$Options.visible = false
+	if play_state == states.STOP:
+		$TitleScreen.visible = true
+	else: # game is paused
+		$Pause.visible = true
+
+
+func resume():
+	play_state = states.PLAY
+	$Pause.visible = false
+	$HUD/PauseButton.visible = true
+	$MobTimer.paused = false
+
+
+func pause():
+	play_state = states.PAUSE
+	$Pause.visible = true
+	$HUD/PauseButton.visible = false
+	$MobTimer.paused = true

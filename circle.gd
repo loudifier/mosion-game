@@ -4,7 +4,6 @@ var velocity = Vector2.ZERO
 @export var radius = 50.0
 var base_radius = 378/2 # size of the sprite
 
-@export var color = Color.WHITE
 
 # if fade_status is set to a falsy value no fade will be applied in _process()
 # if fade_status=='in' the circle will fade in
@@ -22,15 +21,17 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	position += velocity * delta
+	if get_node("/root/Main").play_state != get_node("/root/Main").states.PAUSE:
+		position += velocity * delta
 	
 	for area in get_overlapping_areas():
 		if 'absorbable' in area and absorbable and area.absorbable:
 			# collision detection seems to be off by 1 frame. Probably a better way to handle it, but performing a collision sanity check works
 			if position.distance_to(area.position) < (radius + area.radius):
 				absorb(area)
-	
+				
 	if fade_status:
+		var color = get_modulate()
 		if fade_status=='in':
 			color.a = min(color.a + delta/fade_time, 1)
 		else:
@@ -38,6 +39,7 @@ func _process(delta):
 		set_modulate(color)
 		if color.a==0 or color.a==1:
 			fade_status=null
+	
 
 func absorb(enemy):
 	# when another circle (enemy) collides with this node either absorb or get absorbed by the enemy
@@ -52,12 +54,20 @@ func absorb(enemy):
 			
 			# add absorbed area to larger circle, adusted by growth factor
 			set_area(get_area() + area_delta * growth_factor)
+			
 
 func set_radius(new_radius):
 	if new_radius < 0:
 		absorbable = false
 	radius = max(new_radius, 0)
 	scale = Vector2.ONE * radius/base_radius
+	update_color()
+	
+func update_color():
+	var alpha = get_modulate().a
+	var color = get_node("/root/Main").color_scale.get_color(radius)
+	color.a = alpha
+	set_modulate(color)
 	
 func get_area():
 	return PI * pow(radius,2)
@@ -66,11 +76,15 @@ func set_area(_area):
 	set_radius(sqrt(_area/PI))
 	
 func fade_in(fade_length):
+	var color = get_modulate()
 	color.a = 0
+	set_modulate(color)
 	fade_status = 'in'
 	fade_time = fade_length
 	
 func fade_out(fade_length):
+	var color = get_modulate()
 	color.a = 1
+	set_modulate(color)
 	fade_status = 'out'
 	fade_time = fade_length

@@ -25,3 +25,4 @@ Button/styles/focus = SubResource("StyleBoxEmpty_tixvt")
 Button/styles/hover = SubResource("StyleBoxEmpty_5spp0")
 Button/styles/normal = SubResource("StyleBoxEmpty_0de8v")
 Button/styles/pressed = SubResource("StyleBoxEmpty_bft0e")
+LinkButton/constants/underline_spacing = 4

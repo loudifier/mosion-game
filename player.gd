@@ -1,17 +1,16 @@
 extends "res://circle.gd"
 
-@export var outline = 5.0
+@export var outline = 6.0
 
 @export var move_speed = 10
 @export var friction = 0.01
 
-
-
+signal game_over
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	super._ready()
-	growth_factor = 0.1
+	growth_factor = 0.01
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -45,6 +44,9 @@ func set_radius(new_radius):
 	super.set_radius(new_radius)
 	var fill_radius = radius - outline
 	$Fill.scale = Vector2.ONE * (fill_radius / radius)
+	if not radius:
+		game_over.emit()
+
 
 func start(start_position, starting_radius = 50.0):
 	position = start_position

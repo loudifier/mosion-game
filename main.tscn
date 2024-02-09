@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://c8u678fwyef7c"]
+[gd_scene load_steps=17 format=3 uid="uid://c8u678fwyef7c"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_efij6"]
 [ext_resource type="PackedScene" uid="uid://coqor2877ks5l" path="res://player.tscn" id="2_nphoj"]
@@ -7,7 +7,9 @@
 [ext_resource type="Theme" uid="uid://ddc5jc2skuwd8" path="res://font/averia.tres" id="5_yr6rn"]
 [ext_resource type="FontFile" uid="uid://mnjqkc54yerk" path="res://font/AveriaSerifLibre-Bold.ttf" id="6_k03yo"]
 [ext_resource type="Texture2D" uid="uid://gyd7vhxpyq4b" path="res://speaker.svg" id="7_2jboq"]
+[ext_resource type="Texture2D" uid="uid://32btv876nlk6" path="res://pause.svg" id="7_mngyd"]
 [ext_resource type="Texture2D" uid="uid://db0kp35d4jsdp" path="res://speaker-mute.svg" id="8_ffcqt"]
+[ext_resource type="Texture2D" uid="uid://bd4l4txlppda6" path="res://back.svg" id="10_b6s37"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gm1r5"]
 font = ExtResource("6_k03yo")
@@ -36,14 +38,37 @@ shadow_size = 20
 shadow_color = Color(1, 1, 1, 0.0627451)
 shadow_offset = Vector2(0, 0)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b78kf"]
+bg_color = Color(0.7, 0.7, 0.7, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+expand_margin_top = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="Theme" id="Theme_a81xs"]
+HSlider/styles/slider = SubResource("StyleBoxFlat_b78kf")
+
 [sub_resource type="Environment" id="Environment_6pe36"]
 background_mode = 3
 glow_enabled = true
-glow_hdr_threshold = 0.8
+glow_blend_mode = 4
+glow_hdr_threshold = 0.75
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_efij6")
 mob_scene = ExtResource("3_bcq41")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 3840.0
+offset_bottom = 3840.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.2, 0.2, 1)
 
 [node name="Player" parent="." instance=ExtResource("2_nphoj")]
 visible = false
@@ -51,7 +76,6 @@ visible = false
 [node name="MobTimer" type="Timer" parent="."]
 
 [node name="HUD" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="VirtualJoystick" parent="HUD" instance=ExtResource("4_7titn")]
 visible = false
@@ -69,13 +93,23 @@ anchor_right = 0.5
 offset_left = -650.0
 offset_top = 64.0
 offset_right = 650.0
-offset_bottom = 137.0
+offset_bottom = 139.0
 grow_horizontal = 2
 text = "0"
 label_settings = SubResource("LabelSettings_gm1r5")
 horizontal_alignment = 1
 
+[node name="PauseButton" type="TextureButton" parent="HUD"]
+offset_left = 83.0
+offset_top = 65.0
+offset_right = 833.0
+offset_bottom = 965.0
+scale = Vector2(0.055, 0.055)
+theme = ExtResource("5_yr6rn")
+texture_normal = ExtResource("7_mngyd")
+
 [node name="TitleScreen" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="StartButton" type="Button" parent="TitleScreen"]
 anchors_preset = 8
@@ -84,9 +118,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -290.0
-offset_top = 73.0
+offset_top = 23.0
 offset_right = -136.0
-offset_bottom = 127.0
+offset_bottom = 77.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("5_yr6rn")
@@ -131,9 +165,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -290.0
-offset_top = -27.0
+offset_top = -77.0
 offset_right = -120.0
-offset_bottom = 27.0
+offset_bottom = -23.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("5_yr6rn")
@@ -146,20 +180,216 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -230.0
-offset_top = -210.0
-offset_right = 570.0
-offset_bottom = 590.0
+offset_left = -180.0
+offset_top = -170.0
+offset_right = 620.0
+offset_bottom = 630.0
 grow_horizontal = 0
 grow_vertical = 0
-scale = Vector2(0.2, 0.2)
+scale = Vector2(0.12, 0.12)
 toggle_mode = true
 texture_normal = ExtResource("7_2jboq")
 texture_pressed = ExtResource("8_ffcqt")
 
+[node name="Pause" type="CanvasLayer" parent="."]
+
+[node name="ResumeButton" type="Button" parent="Pause"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = 23.0
+offset_right = -136.0
+offset_bottom = 77.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "resume"
+alignment = 0
+
+[node name="OptionsButton" type="Button" parent="Pause"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -77.0
+offset_right = -120.0
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "options	"
+alignment = 0
+
+[node name="MuteButton" type="TextureButton" parent="Pause"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -170.0
+offset_right = 620.0
+offset_bottom = 630.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.12, 0.12)
+toggle_mode = true
+texture_normal = ExtResource("7_2jboq")
+texture_pressed = ExtResource("8_ffcqt")
+
+[node name="Options" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="MuteButton" type="TextureButton" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 171.0
+offset_top = 109.0
+offset_right = 971.0
+offset_bottom = 909.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.12, 0.12)
+toggle_mode = true
+texture_normal = ExtResource("7_2jboq")
+texture_pressed = ExtResource("8_ffcqt")
+
+[node name="BackButton" type="TextureButton" parent="Options"]
+offset_left = 75.0
+offset_top = 73.0
+offset_right = 117.0
+offset_bottom = 127.0
+scale = Vector2(0.08, 0.08)
+theme = ExtResource("5_yr6rn")
+texture_normal = ExtResource("10_b6s37")
+
+[node name="EffectsLabel" type="Label" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = 23.0
+offset_right = 12.0
+offset_bottom = 77.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "sound effects	"
+
+[node name="MuteLabel" type="Label" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = 123.0
+offset_right = 12.0
+offset_bottom = 177.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "mute"
+
+[node name="MusicLabel" type="Label" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -77.0
+offset_right = 12.0
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "music"
+
+[node name="ThemeLabel" type="Label" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -177.0
+offset_right = 12.0
+offset_bottom = -123.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "theme"
+
+[node name="ThemeButton" type="LinkButton" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 90.0
+offset_top = -177.0
+offset_right = 392.0
+offset_bottom = -123.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "emosional"
+
+[node name="MusicSlider" type="HSlider" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 87.0
+offset_top = -84.0
+offset_right = 251.0
+offset_bottom = -38.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.5, 1.5)
+theme = SubResource("Theme_a81xs")
+value = 70.0
+
+[node name="EffectsSlider" type="HSlider" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 87.0
+offset_top = 16.0
+offset_right = 251.0
+offset_bottom = 62.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.5, 1.5)
+theme = SubResource("Theme_a81xs")
+value = 70.0
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_6pe36")
 
+[connection signal="game_over" from="Player" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
+[connection signal="pressed" from="HUD/PauseButton" to="." method="pause"]
 [connection signal="pressed" from="TitleScreen/StartButton" to="." method="new_game"]
 [connection signal="pressed" from="TitleScreen/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="toggled" from="TitleScreen/MuteButton" to="." method="_on_mute_button_toggled"]
+[connection signal="pressed" from="Pause/ResumeButton" to="." method="resume"]
+[connection signal="pressed" from="Pause/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="toggled" from="Pause/MuteButton" to="." method="_on_mute_button_toggled"]
+[connection signal="toggled" from="Options/MuteButton" to="." method="_on_mute_button_toggled"]
+[connection signal="pressed" from="Options/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="Options/ThemeButton" to="." method="_on_theme_button_pressed"]

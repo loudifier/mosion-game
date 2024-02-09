@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="800px" height="800px" viewBox="14.782 6.75 9.437 8.451" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <style type="text/css">
+	.st0{opacity:0.2;fill:none;stroke:#ffffff;stroke-width:5.000000e-02;stroke-miterlimit:10;}
+</style>
+  <g id="grid_system"/>
+  <g id="_icons">
+    <g>
+      <path d="M 23 10 L 18.4 10 L 19.7 8.7 C 20.1 8.3 20.1 7.7 19.7 7.3 C 19.3 6.9 18.7 6.9 18.3 7.3 L 15.3 10.3 C 15.2 10.4 15.1 10.5 15.1 10.6 C 15 10.8 15 11.1 15.1 11.4 C 15.2 11.5 15.2 11.6 15.3 11.7 L 18.3 14.7 C 18.5 14.9 18.8 15 19 15 C 19.2 15 19.5 14.9 19.7 14.7 C 20.1 14.3 20.1 13.7 19.7 13.3 L 18.4 12 L 23 12 C 23.6 12 24 11.6 24 11 C 24 10.4 23.6 10 23 10 Z" fill="#ffffff"/>
+      <path d="M18,16L18,16C18,16,18,16,18,16C18,16,18,16,18,16z" fill="#ffffff"/>
+    </g>
+  </g>
+</svg>
