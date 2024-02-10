@@ -1,5 +1,7 @@
 extends Node2D
 
+var save_file = 'user://save.json'
+
 @export var mob_scene: PackedScene
 var screen_size
 
@@ -17,14 +19,32 @@ enum states {
 }
 var play_state = states.STOP
 
+# variables related to game state and scoring
+var score = 0
+var level = 1
+var level_threshold = 200.0 # level up when player radius passes threshold
+var per_level_scaling = level_threshold/starting_size
+var score_multiplier = 1.0  # current level scaling for scoring, accumulates and compounds as you level up
+var level_transition_length = 5.0 # time in seconds
+var level_time = 0 # time remaining in the current level transition
+
+# data to keep track of for high score purposes
+var high_score = 0
+var high_score_circles = {} # data needed to recreate a screenshot of the moment the high score was achieved 
+var largest_size = 0 # largest player radius in the current (or most recent) game
+var last_game_circles = {}
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$TitleScreen.visible = true
 	$HUD.visible = false
 	$Options.visible = false
 	$Pause.visible = false
+	$GameOver.visible = false
 	
 	screen_size = get_viewport_rect().size
+	get_tree().get_root().size_changed.connect(_screen_size_changed)
+	
 	max_mob_radius = min(screen_size.x, screen_size.y) / 8
 	
 	color_scale.set_theme(color_scale.themes.EMOSIONAL)
@@ -32,26 +52,98 @@ func _ready():
 	$Background.color = color_scale.background_color
 	
 	$MobTimer.start()
+	
+	# read save file after everything has been initialized so default values can be overridden
+	read_save()
+	
+func read_save():
+	var f = FileAccess.open(save_file, FileAccess.READ)
+	if FileAccess.file_exists(save_file):
+		while f.get_position() < f.get_length():
+			var json_str = f.get_line()
+			var json = JSON.new()
+			json.parse(json_str)
+			var save_data = json.get_data()
+			high_score_circles = save_data #includes other junk, but shouldn't hurt functionality
+			high_score = save_data['high_score']
+			set_theme(save_data['theme'])
+			# volume/mute settings
 
+func save_game():
+	var f = FileAccess.open(save_file, FileAccess.WRITE)
+	var save_data = high_score_circles
+	save_data['theme'] = color_scale.current_theme
+	save_data['high_score'] = high_score
+	# volume/mute settings
+	var json_str = JSON.stringify(save_data)
+	f.store_line(json_str)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
-
+	if $Player.radius > level_threshold and level_time==0:
+		level_time = level_transition_length
+		
+	if level_time:
+		# transition to next level, frame by frame
+		level_time = max(level_time - delta, 0)
+		
+		# number of transition frames used to proportionally scale values
+		var num_transition_frames = level_transition_length / delta
+		
+		# scale the value up
+		score_multiplier *= pow(per_level_scaling, 1.0/num_transition_frames)
+		
+		# scale circle sizes and positions down
+		var frame_scaling = pow(1.0/per_level_scaling, 1.0/num_transition_frames)
+		var xmid = screen_size.x/2
+		var ymid = screen_size.y/2
+		
+		$Player.set_radius($Player.radius * frame_scaling)
+		$Player.velocity *= frame_scaling
+		$Player.position.x = xmid + frame_scaling * ($Player.position.x - xmid)
+		$Player.position.y = ymid + frame_scaling * ($Player.position.y - ymid)
+		
+		for mob in get_tree().get_nodes_in_group('mobs'):
+			mob.set_radius(mob.radius * frame_scaling)
+			mob.velocity *= frame_scaling
+			mob.position.x = xmid + frame_scaling * (mob.position.x - xmid)
+			mob.position.y = ymid + frame_scaling * (mob.position.y - ymid)
+		
+		if level_time == 0:
+			level += 1
 
 func game_over():
 	play_state = states.STOP
+	print(high_score)
+	if score > high_score:
+		print(high_score)
+		high_score = score
+		print(high_score)
+		high_score_circles = last_game_circles.duplicate()
+		high_score_circles['screen'] = {'x'=screen_size.x, 'y'=screen_size.y}
+		$GameOver/ScoreLabel.text = 'new high score!'
+	else:
+		$GameOver/ScoreLabel.text = 'your score: ' + score_string(score)
+	print(high_score)
+	$GameOver/HighScoreLabel.text = 'high score: ' + score_string(high_score)
 	$HUD.visible = false
-	#$GameOver.visible = true
-	$TitleScreen.visible = true
+	$GameOver.visible = true
+	
+	save_game()
 
 func new_game():
-	play_state = states.PLAY
 	$Player.start(screen_size/2, starting_size)
 	$HUD.visible = true
 	$TitleScreen.visible = false
+	$GameOver.visible = false
 	get_tree().call_group('mobs', 'fade_delete')
+	score = 0
+	$HUD/ScoreLabel.text = str(0)
+	score_multiplier = 1.0
+	level = 1
+	largest_size = starting_size
 	
+	play_state = states.PLAY
 	
 	
 func _on_mob_timer_timeout():
@@ -114,21 +206,23 @@ func update_background(color_value):
 
 
 func _on_mute_button_toggled(toggled_on):
-	pass # Replace with function body.
+	save_game()
 
 
 func _on_theme_button_pressed():
 	var num_themes = len(color_scale.themes)
 	for theme in color_scale.themes:
 		if color_scale.current_theme == color_scale.themes[theme]:
-			color_scale.set_theme((color_scale.themes[theme]+1)%num_themes)
+			set_theme((color_scale.themes[theme]+1)%num_themes)
 			break
-			
+	save_game()
+
+func set_theme(theme):
+	color_scale.set_theme(theme)
 	$Options/ThemeButton.text = color_scale.theme_name
 	$Background.color = color_scale.background_color
 	$Player.update_color()
 	get_tree().call_group('mobs', 'update_color')
-
 
 func _on_back_button_pressed():
 	$Options.visible = false
@@ -150,3 +244,43 @@ func pause():
 	$Pause.visible = true
 	$HUD/PauseButton.visible = false
 	$MobTimer.paused = true
+
+
+func add_score(increase):
+	score += increase * score_multiplier
+	$HUD/ScoreLabel.text = score_string(score)
+	
+	last_game_circles['player'] = {
+		'radius' = $Player.radius,
+		'x' = $Player.position.x,
+		'y' = $Player.position.y
+	}
+	last_game_circles['mobs'] = []
+	for mob in get_tree().get_nodes_in_group('mobs'):
+		last_game_circles['mobs'].append({
+			'radius' = mob.radius,
+			'x' = mob.position.x,
+			'y' = mob.position.y
+		})
+		
+	largest_size = max(largest_size, $Player.radius)
+
+func score_string(score_num):
+	var score_str = ''
+	if score_num < 10:
+		score_str = str(snapped(score_num,0.1))
+	else:
+		score_str = str(round(score_num))
+	return score_str
+
+
+
+func _screen_size_changed():
+	screen_size = get_viewport_rect().size
+
+
+func _on_main_menu_button_pressed():
+	$HUD.visible = false
+	$Pause.visible = false
+	$GameOver.visible = false
+	$TitleScreen.visible = true

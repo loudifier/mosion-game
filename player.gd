@@ -7,10 +7,12 @@ extends "res://circle.gd"
 
 signal game_over
 
+signal add_score
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	super._ready()
-	growth_factor = 0.01
+	growth_factor = 0.2
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -41,6 +43,8 @@ func _process(delta):
 	
 
 func set_radius(new_radius):
+	if new_radius > radius and get_node("/root/Main").play_state == get_node("/root/Main").states.PLAY:
+		add_score.emit(new_radius - radius)
 	super.set_radius(new_radius)
 	var fill_radius = radius - outline
 	$Fill.scale = Vector2.ONE * (fill_radius / radius)
