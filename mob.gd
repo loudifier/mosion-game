@@ -3,6 +3,8 @@ extends "res://circle.gd"
 @export var min_speed = 20
 @export var max_speed = 150
 
+var blur_outline = 3.0
+
 var delete_on_fade_out = false
 
 # Called when the node enters the scene tree for the first time.
@@ -72,3 +74,12 @@ func absorb(enemy):
 		super.absorb(enemy)
 		
 		
+
+func set_radius(new_radius):
+	super.set_radius(new_radius)
+	if radius:
+		$Blur.scale = Vector2.ONE * ((radius+blur_outline) / radius)
+		$Blur/Blur2.scale = Vector2.ONE * ((radius+blur_outline*2/3) / radius)
+		$Blur/Blur3.scale = Vector2.ONE * ((radius+blur_outline/3) / radius)
+	else:
+		$Blur.visible = false

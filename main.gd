@@ -1,17 +1,31 @@
 extends Node2D
 
+# game save data
 var save_file = 'user://save.json'
 
+# base scene for enemy circles
 @export var mob_scene: PackedScene
+
+# global for calculations based on screen size
 var screen_size
 
+# difficulty parameters
+# needs to be refactored. Parameters affecting difficult spread around project
 @export var starting_size = 20
 @export var min_mob_radius = 5
-@export var max_mob_radius = 540 # placeholder value assuming 1080p, updated in _ready()
+@export var max_mob_radius = 135 # placeholder value assuming 1080p, updated based on screen size in _ready()
+# mob speed in mob scene
+# mob spawn frequency in MobTimer 
+# mob spawn size in randf_new_mob_radius()
+# player growth rate in player scene _ready
+# player movement (speed, friction) in player scene
 
+
+# class to manage themes
 var ColorScale = load("res://ColorScale.gd")
 var color_scale = ColorScale.new()
 
+# play states
 enum states {
 	STOP,
 	PLAY,
@@ -19,7 +33,7 @@ enum states {
 }
 var play_state = states.STOP
 
-# variables related to game state and scoring
+# variables related to scoring and level transitions
 var score = 0
 var level = 1
 var level_threshold = 200.0 # level up when player radius passes threshold
@@ -41,11 +55,12 @@ func _ready():
 	$Options.visible = false
 	$Pause.visible = false
 	$GameOver.visible = false
+	$Joystick.visible = false
 	
 	screen_size = get_viewport_rect().size
 	get_tree().get_root().size_changed.connect(_screen_size_changed)
 	
-	max_mob_radius = min(screen_size.x, screen_size.y) / 8
+	max_mob_radius = min(screen_size.x, screen_size.y) / 8.0
 	
 	color_scale.set_theme(color_scale.themes.EMOSIONAL)
 	color_scale.scale_range = [min_mob_radius, 2*max_mob_radius]
@@ -55,6 +70,8 @@ func _ready():
 	
 	# read save file after everything has been initialized so default values can be overridden
 	read_save()
+	
+	
 	
 func read_save():
 	var f = FileAccess.open(save_file, FileAccess.READ)
@@ -80,9 +97,13 @@ func save_game():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	# most game logic is handled in (or called from) circle/player/mob _process functions
+	# game state and UI primarily handled by signal handlers
+	
+	# level up and level up transition
 	if $Player.radius > level_threshold and level_time==0:
 		level_time = level_transition_length
-		
+	
 	if level_time:
 		# transition to next level, frame by frame
 		level_time = max(level_time - delta, 0)
@@ -109,31 +130,30 @@ func _process(delta):
 			mob.position.x = xmid + frame_scaling * (mob.position.x - xmid)
 			mob.position.y = ymid + frame_scaling * (mob.position.y - ymid)
 		
+		# increment level if this is the last frame of the transition
 		if level_time == 0:
 			level += 1
 
 func game_over():
 	play_state = states.STOP
-	print(high_score)
 	if score > high_score:
-		print(high_score)
 		high_score = score
-		print(high_score)
 		high_score_circles = last_game_circles.duplicate()
 		high_score_circles['screen'] = {'x'=screen_size.x, 'y'=screen_size.y}
 		$GameOver/ScoreLabel.text = 'new high score!'
 	else:
 		$GameOver/ScoreLabel.text = 'your score: ' + score_string(score)
-	print(high_score)
 	$GameOver/HighScoreLabel.text = 'high score: ' + score_string(high_score)
 	$HUD.visible = false
 	$GameOver.visible = true
+	$Joystick.visible = false
 	
 	save_game()
 
 func new_game():
 	$Player.start(screen_size/2, starting_size)
 	$HUD.visible = true
+	$Joystick.visible = true
 	$TitleScreen.visible = false
 	$GameOver.visible = false
 	get_tree().call_group('mobs', 'fade_delete')
@@ -236,6 +256,7 @@ func resume():
 	play_state = states.PLAY
 	$Pause.visible = false
 	$HUD/PauseButton.visible = true
+	$Joystick.visible = true
 	$MobTimer.paused = false
 
 
@@ -243,7 +264,9 @@ func pause():
 	play_state = states.PAUSE
 	$Pause.visible = true
 	$HUD/PauseButton.visible = false
+	$Joystick.visible = false
 	$MobTimer.paused = true
+	
 
 
 func add_score(increase):

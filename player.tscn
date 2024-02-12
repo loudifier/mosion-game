@@ -14,5 +14,13 @@ friction = 0.01
 z_index = 1
 
 [node name="Outline" type="Sprite2D" parent="." index="2"]
-modulate = Color(0.5, 0.5, 0.5, 1)
+self_modulate = Color(0.501961, 0.501961, 0.501961, 1)
+texture = ExtResource("3_8qw86")
+
+[node name="Outline2" type="Sprite2D" parent="Outline" index="0"]
+self_modulate = Color(0.670588, 0.670588, 0.670588, 1)
+texture = ExtResource("3_8qw86")
+
+[node name="Outline3" type="Sprite2D" parent="Outline" index="1"]
+self_modulate = Color(0.85098, 0.85098, 0.85098, 1)
 texture = ExtResource("3_8qw86")

@@ -48,6 +48,8 @@ func set_radius(new_radius):
 	super.set_radius(new_radius)
 	var fill_radius = radius - outline
 	$Fill.scale = Vector2.ONE * (fill_radius / radius)
+	$Outline/Outline2.scale = Vector2.ONE * (radius - outline*2/3) / radius
+	$Outline/Outline3.scale = Vector2.ONE * (radius - outline/3) / radius
 	if not radius:
 		game_over.emit()
 

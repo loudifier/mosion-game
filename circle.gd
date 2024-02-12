@@ -2,7 +2,7 @@ extends Area2D
 
 var velocity = Vector2.ZERO
 @export var radius = 50.0
-var base_radius = 378/2 # size of the sprite
+var base_radius = 378/2.0 # size of the sprite
 
 
 # if fade_status is set to a falsy value no fade will be applied in _process()

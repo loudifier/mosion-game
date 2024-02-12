@@ -52,7 +52,6 @@ HSlider/styles/slider = SubResource("StyleBoxFlat_b78kf")
 
 [sub_resource type="Environment" id="Environment_6pe36"]
 background_mode = 3
-glow_enabled = true
 glow_blend_mode = 4
 glow_hdr_threshold = 0.75
 
@@ -70,6 +69,22 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.2, 0.2, 0.2, 1)
 
+[node name="Joystick" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VirtualJoystick" parent="Joystick" instance=ExtResource("4_7titn")]
+visible = false
+layout_mode = 1
+offset_top = 160.0
+offset_right = 3840.0
+offset_bottom = 4000.0
+pressed_color = Color(1, 1, 1, 1)
+clampzone_size = 140.0
+joystick_mode = 1
+
 [node name="Player" parent="." instance=ExtResource("2_nphoj")]
 visible = false
 
@@ -77,15 +92,6 @@ visible = false
 
 [node name="HUD" type="CanvasLayer" parent="."]
 visible = false
-
-[node name="VirtualJoystick" parent="HUD" instance=ExtResource("4_7titn")]
-visible = false
-offset_top = -1080.0
-offset_right = 3840.0
-offset_bottom = 2760.0
-deadzone_size = 20.0
-clampzone_size = 100.0
-joystick_mode = 1
 
 [node name="ScoreLabel" type="Label" parent="HUD"]
 anchors_preset = 5
@@ -446,6 +452,15 @@ value = 70.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_6pe36")
+
+[node name="DebugText" type="Label" parent="."]
+visible = false
+offset_left = 60.0
+offset_top = 64.0
+offset_right = 660.0
+offset_bottom = 431.0
+text = "debug"
+autowrap_mode = 1
 
 [connection signal="add_score" from="Player" to="." method="add_score"]
 [connection signal="game_over" from="Player" to="." method="game_over"]
