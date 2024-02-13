@@ -1,8 +1,5 @@
 extends "res://circle.gd"
 
-@export var min_speed = 20
-@export var max_speed = 150
-
 var blur_outline = 3.0
 
 var delete_on_fade_out = false
@@ -18,7 +15,7 @@ func _process(delta):
 	super._process(delta)
 	
 
-func spawn(spawn_radius):
+func spawn(spawn_radius, min_speed, max_speed):
 	# randomize spawn point around edge of screen
 	var screen_size = get_viewport_rect().size
 	var spawn_position = randf_range(0, 2*screen_size.x + screen_size.y)
@@ -46,7 +43,11 @@ func spawn(spawn_radius):
 	
 	# randomize speed and direction
 	velocity = randf_range(min_speed, max_speed) * velocity.rotated(randf_range(-PI/4,PI/4))
-		
+	
+	# boost speed for smaller mobs
+	var boost = pow(get_node("/root/Main/Player").radius / spawn_radius, 2)
+	velocity *= (1 + randf_range(0, boost))
+	
 	# initialize radius
 	set_radius(spawn_radius)
 	

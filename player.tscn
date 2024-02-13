@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://coqor2877ks5l"]
+[gd_scene load_steps=6 format=3 uid="uid://coqor2877ks5l"]
 
 [ext_resource type="PackedScene" uid="uid://c4c45w00dfobl" path="res://circle.tscn" id="1_ei23r"]
 [ext_resource type="Script" path="res://player.gd" id="2_50qkj"]
 [ext_resource type="Texture2D" uid="uid://btopc8eo1atpl" path="res://circle_100x100_white.svg" id="3_8qw86"]
+[ext_resource type="AudioStream" uid="uid://din78ntdfjb21" path="res://sounds/absorb-up.wav" id="4_6wgtm"]
+[ext_resource type="AudioStream" uid="uid://c8wn4hqcw22x6" path="res://sounds/absorb-down.wav" id="5_fmyax"]
 
 [node name="Player" groups=["player"] instance=ExtResource("1_ei23r")]
 script = ExtResource("2_50qkj")
-outline = 6.0
+outline = 3.0
 move_speed = 10
 friction = 0.01
 
@@ -14,13 +16,30 @@ friction = 0.01
 z_index = 1
 
 [node name="Outline" type="Sprite2D" parent="." index="2"]
-self_modulate = Color(0.501961, 0.501961, 0.501961, 1)
+self_modulate = Color(0.33, 0.33, 0.33, 1)
 texture = ExtResource("3_8qw86")
 
 [node name="Outline2" type="Sprite2D" parent="Outline" index="0"]
-self_modulate = Color(0.670588, 0.670588, 0.670588, 1)
+self_modulate = Color(0.329412, 0.329412, 0.329412, 1)
 texture = ExtResource("3_8qw86")
 
 [node name="Outline3" type="Sprite2D" parent="Outline" index="1"]
-self_modulate = Color(0.85098, 0.85098, 0.85098, 1)
+self_modulate = Color(0.329412, 0.329412, 0.329412, 1)
 texture = ExtResource("3_8qw86")
+
+[node name="AbsorbUp" type="AudioStreamPlayer" parent="." index="4"]
+stream = ExtResource("4_6wgtm")
+volume_db = -20.0
+
+[node name="AbsorbDown" type="AudioStreamPlayer" parent="." index="5"]
+stream = ExtResource("5_fmyax")
+volume_db = -20.0
+
+[node name="UpTimer" type="Timer" parent="." index="6"]
+one_shot = true
+
+[node name="DownTimer" type="Timer" parent="." index="7"]
+one_shot = true
+
+[connection signal="timeout" from="UpTimer" to="." method="_on_up_timer_timeout"]
+[connection signal="timeout" from="DownTimer" to="." method="_on_down_timer_timeout"]

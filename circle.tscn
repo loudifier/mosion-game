@@ -1,10 +1,34 @@
-[gd_scene load_steps=4 format=3 uid="uid://c4c45w00dfobl"]
+[gd_scene load_steps=11 format=3 uid="uid://c4c45w00dfobl"]
 
 [ext_resource type="Script" path="res://circle.gd" id="1_5ftsg"]
 [ext_resource type="Texture2D" uid="uid://btopc8eo1atpl" path="res://circle_100x100_white.svg" id="2_uttlb"]
+[ext_resource type="AudioStream" uid="uid://dfhblgpcq4g14" path="res://sounds/pop0.wav" id="3_ysh1q"]
+[ext_resource type="AudioStream" uid="uid://pyc1u7o3nrgv" path="res://sounds/pop1.wav" id="4_dgqqo"]
+[ext_resource type="AudioStream" uid="uid://1qp48lspfjhc" path="res://sounds/pop2.wav" id="5_s3uwr"]
+[ext_resource type="AudioStream" uid="uid://bg0n2v4ht7kpx" path="res://sounds/pop3.wav" id="6_phy8k"]
+[ext_resource type="AudioStream" uid="uid://dpnfh0ffwe6nl" path="res://sounds/pop4.wav" id="7_nlxec"]
+[ext_resource type="AudioStream" uid="uid://dje8vaj5qy3oe" path="res://sounds/pop5.wav" id="8_wmid2"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kwcaf"]
 radius = 50.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_1rf8v"]
+playback_mode = 1
+random_pitch = 1.5
+random_volume_offset_db = 3.0
+streams_count = 6
+stream_0/stream = ExtResource("3_ysh1q")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("4_dgqqo")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("5_s3uwr")
+stream_2/weight = 1.0
+stream_3/stream = ExtResource("6_phy8k")
+stream_3/weight = 1.0
+stream_4/stream = ExtResource("7_nlxec")
+stream_4/weight = 1.0
+stream_5/stream = ExtResource("8_wmid2")
+stream_5/weight = 1.0
 
 [node name="Circle" type="Area2D" groups=["circles"]]
 script = ExtResource("1_5ftsg")
@@ -14,3 +38,9 @@ texture = ExtResource("2_uttlb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_kwcaf")
+
+[node name="PopSound" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_1rf8v")
+volume_db = -20.0
+pitch_scale = 0.75
+max_polyphony = 10

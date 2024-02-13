@@ -10,16 +10,22 @@ var save_file = 'user://save.json'
 var screen_size
 
 # difficulty parameters
-# needs to be refactored. Parameters affecting difficult spread around project
-@export var starting_size = 20
-@export var min_mob_radius = 5
-@export var max_mob_radius = 135 # placeholder value assuming 1080p, updated based on screen size in _ready()
-# mob speed in mob scene
-# mob spawn frequency in MobTimer 
-# mob spawn size in randf_new_mob_radius()
+var starting_size = 20
+var mob_min_radius
+var mob_max_radius
+var mob_size_weight
+var mob_min_speed
+var mob_max_speed
+# other parameters affecting difficult spread around project
+# bias value for mob size weighted RNG (mob radius/2) in randf_new_mob_radius() below
+# MobTimer time, inverse of spawn rate
+# small mobs bonus speed in mob scene
 # player growth rate in player scene _ready
 # player movement (speed, friction) in player scene
 
+# class to set difficulty
+var DifficultySettings = load("res://DifficultySettings.gd")
+var difficulty = DifficultySettings.new()
 
 # class to manage themes
 var ColorScale = load("res://ColorScale.gd")
@@ -48,6 +54,11 @@ var high_score_circles = {} # data needed to recreate a screenshot of the moment
 var largest_size = 0 # largest player radius in the current (or most recent) game
 var last_game_circles = {}
 
+# audio settings
+var effects_vol = 0.8 # scale from 0-1. Children responsible for converting to useful dB scale
+var music_vol = 0.8
+var mute = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	$TitleScreen.visible = true
@@ -60,10 +71,12 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	get_tree().get_root().size_changed.connect(_screen_size_changed)
 	
-	max_mob_radius = min(screen_size.x, screen_size.y) / 8.0
+	level_threshold = (5.0/16) * min(screen_size.x, screen_size.y)
+	difficulty.level = 1
+	update_difficulty()
 	
 	color_scale.set_theme(color_scale.themes.EMOSIONAL)
-	color_scale.scale_range = [min_mob_radius, 2*max_mob_radius]
+	color_scale.scale_range = [mob_min_radius, 2*mob_max_radius]
 	$Background.color = color_scale.background_color
 	
 	$MobTimer.start()
@@ -71,6 +84,8 @@ func _ready():
 	# read save file after everything has been initialized so default values can be overridden
 	read_save()
 	
+	MobileAds.initialize()
+	$InterstitialAd.load_ad()
 	
 	
 func read_save():
@@ -81,17 +96,32 @@ func read_save():
 			var json = JSON.new()
 			json.parse(json_str)
 			var save_data = json.get_data()
+			
 			high_score_circles = save_data #includes other junk, but shouldn't hurt functionality
-			high_score = save_data['high_score']
-			set_theme(save_data['theme'])
-			# volume/mute settings
+			if save_data.has('high_score'):
+				high_score = save_data['high_score']
+			if save_data.has('theme'):
+				set_theme(save_data['theme'])
+			if save_data.has('mute'):
+				mute = save_data['mute']
+				_on_mute_button_toggled(mute, false)
+			if save_data.has('music_vol'):
+				music_vol = save_data['music_vol']
+				$Options/MusicSlider.set_value_no_signal(100*music_vol)
+			if save_data.has('effects_vol'):
+				effects_vol = save_data['effects_vol']
+				$Options/EffectsSlider.set_value_no_signal(100*effects_vol)
 
 func save_game():
 	var f = FileAccess.open(save_file, FileAccess.WRITE)
+	
 	var save_data = high_score_circles
 	save_data['theme'] = color_scale.current_theme
 	save_data['high_score'] = high_score
-	# volume/mute settings
+	save_data['mute'] = mute
+	save_data['music_vol'] = music_vol
+	save_data['effects_vol'] = effects_vol
+	
 	var json_str = JSON.stringify(save_data)
 	f.store_line(json_str)
 
@@ -132,7 +162,18 @@ func _process(delta):
 		
 		# increment level if this is the last frame of the transition
 		if level_time == 0:
-			level += 1
+			difficulty.level += 1
+			update_difficulty
+			
+
+
+func update_difficulty():
+	mob_min_radius = difficulty.min_mob_radius($Player.radius)
+	mob_max_radius = difficulty.mob_max_radius(screen_size)
+	mob_size_weight = difficulty.mob_size_weight()
+	mob_min_speed = difficulty.mob_min_speed()
+	mob_max_speed = difficulty.mob_max_speed()
+	$MobTimer.wait_time = difficulty.spawn_time()
 
 func game_over():
 	play_state = states.STOP
@@ -150,8 +191,18 @@ func game_over():
 	
 	save_game()
 
+func _on_new_game_clicked():
+	if not $AdTimer.time_left: # ad is loaded and timer has run out
+		$DebugText.text = 'show ad'
+		$InterstitialAd.show_ad()
+		return
+		
+	new_game()
+
 func new_game():
 	$Player.start(screen_size/2, starting_size)
+	difficulty.level = 1
+	update_difficulty()
 	$HUD.visible = true
 	$Joystick.visible = true
 	$TitleScreen.visible = false
@@ -160,7 +211,6 @@ func new_game():
 	score = 0
 	$HUD/ScoreLabel.text = str(0)
 	score_multiplier = 1.0
-	level = 1
 	largest_size = starting_size
 	
 	play_state = states.PLAY
@@ -172,7 +222,7 @@ func _on_mob_timer_timeout():
 	add_child(mob)
 	
 	# spawn mob with a randomized size
-	mob.spawn(randf_new_mob_radius())
+	mob.spawn(randf_new_mob_radius(), mob_min_speed, mob_max_speed)
 	
 	
 func randf_weighted(bias_value, weight=2):
@@ -204,7 +254,7 @@ func randf_range_weighted(from, to, bias_value, weight=2):
 	return randf_weighted(bias_ratio, weight) * value_range + from
 
 func randf_new_mob_radius():
-	return randf_range_weighted(min_mob_radius, max_mob_radius, $Player.radius/2, 2)
+	return randf_range_weighted(mob_min_radius, mob_max_radius, $Player.radius/2, mob_size_weight)
 
 
 func _on_options_button_pressed():
@@ -225,7 +275,20 @@ func update_background(color_value):
 	$Background.color = Color(background_rgb[0],background_rgb[1],background_rgb[2])
 
 
-func _on_mute_button_toggled(toggled_on):
+func _on_mute_button_toggled(toggled_on, save=true):
+	mute = toggled_on
+	$Options/MuteButton.set_pressed_no_signal(toggled_on)
+	$Pause/MuteButton.set_pressed_no_signal(toggled_on)
+	$TitleScreen/MuteButton.set_pressed_no_signal(toggled_on)
+	if save:
+		save_game()
+	
+func _on_music_slider_drag_ended(value_changed):
+	music_vol = $Options/MusicSlider.value / 100.0
+	save_game()
+
+func _on_effects_slider_drag_ended(value_changed):
+	effects_vol = $Options/EffectsSlider.value / 100.0
 	save_game()
 
 
@@ -307,3 +370,7 @@ func _on_main_menu_button_pressed():
 	$Pause.visible = false
 	$GameOver.visible = false
 	$TitleScreen.visible = true
+
+
+func _on_ad_timer_timeout():
+	$DebugText.text = 'ad timer done'

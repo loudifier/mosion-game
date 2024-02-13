@@ -14,10 +14,13 @@ var fade_time = 0
 var absorbable = false
 @export var growth_factor = 1.0
 
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_radius(radius)
 	$CollisionShape2D.shape.set_radius(base_radius)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -43,22 +46,23 @@ func _process(delta):
 
 func absorb(enemy):
 	# when another circle (enemy) collides with this node either absorb or get absorbed by the enemy
-		# the larger circle adjusts the size of both circles, the other circle does nothing
-		if radius > enemy.radius:
-			# first adjust the smaller circle and get the area delta in the process
-			var small_starting_area = enemy.get_area()
-			var distance = position.distance_to(enemy.position)
-			enemy.set_radius(distance-radius)
-			var small_ending_area = enemy.get_area()
-			var area_delta = small_starting_area - small_ending_area
-			
-			# add absorbed area to larger circle, adusted by growth factor
-			set_area(get_area() + area_delta * growth_factor)
-			
+	# the larger circle adjusts the size of both circles, the other circle does nothing
+	if radius > enemy.radius:
+		# first adjust the smaller circle and get the area delta in the process
+		var small_starting_area = enemy.get_area()
+		var distance = position.distance_to(enemy.position)
+		enemy.set_radius(distance-radius)
+		var small_ending_area = enemy.get_area()
+		var area_delta = small_starting_area - small_ending_area
+		
+		# add absorbed area to larger circle, adusted by growth factor
+		set_area(get_area() + area_delta * growth_factor)
+		
 
 func set_radius(new_radius):
 	if new_radius < 0:
 		absorbable = false
+		play_pop()
 	radius = max(new_radius, 0)
 	scale = Vector2.ONE * radius/base_radius
 	update_color()
@@ -88,3 +92,9 @@ func fade_out(fade_length):
 	set_modulate(color)
 	fade_status = 'out'
 	fade_time = fade_length
+	
+func play_pop():
+	if get_node("/root/Main").effects_vol and not get_node("/root/Main").mute:
+		# convert effects volume to dB playback level
+		$PopSound.volume_db = -40 * (1- get_node("/root/Main").effects_vol) - 20
+		$PopSound.play()

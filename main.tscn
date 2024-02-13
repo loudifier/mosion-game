@@ -1,15 +1,16 @@
-[gd_scene load_steps=17 format=3 uid="uid://c8u678fwyef7c"]
+[gd_scene load_steps=18 format=3 uid="uid://c8u678fwyef7c"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_efij6"]
 [ext_resource type="PackedScene" uid="uid://coqor2877ks5l" path="res://player.tscn" id="2_nphoj"]
 [ext_resource type="PackedScene" uid="uid://dmghftj3kythu" path="res://mob.tscn" id="3_bcq41"]
-[ext_resource type="PackedScene" uid="uid://dmr0fcamx7t56" path="res://joystick/virtual_joystick.tscn" id="4_7titn"]
+[ext_resource type="PackedScene" uid="uid://dconwhb5c3goe" path="res://joystick/virtual_joystick.tscn" id="4_7titn"]
 [ext_resource type="Theme" uid="uid://ddc5jc2skuwd8" path="res://font/averia.tres" id="5_yr6rn"]
 [ext_resource type="FontFile" uid="uid://mnjqkc54yerk" path="res://font/AveriaSerifLibre-Bold.ttf" id="6_k03yo"]
 [ext_resource type="Texture2D" uid="uid://gyd7vhxpyq4b" path="res://speaker.svg" id="7_2jboq"]
 [ext_resource type="Texture2D" uid="uid://32btv876nlk6" path="res://pause.svg" id="7_mngyd"]
 [ext_resource type="Texture2D" uid="uid://db0kp35d4jsdp" path="res://speaker-mute.svg" id="8_ffcqt"]
 [ext_resource type="Texture2D" uid="uid://bd4l4txlppda6" path="res://back.svg" id="10_b6s37"]
+[ext_resource type="Script" path="res://InterstitialAd.gd" id="11_a81t3"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gm1r5"]
 font = ExtResource("6_k03yo")
@@ -75,14 +76,17 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="VirtualJoystick" parent="Joystick" instance=ExtResource("4_7titn")]
-visible = false
+[node name="Virtual Joystick" parent="Joystick" instance=ExtResource("4_7titn")]
 layout_mode = 1
-offset_top = 160.0
-offset_right = 3840.0
-offset_bottom = 4000.0
+anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_top = 0.0
+offset_right = 8192.0
+offset_bottom = 8192.0
+grow_vertical = 1
 pressed_color = Color(1, 1, 1, 1)
-clampzone_size = 140.0
+clampzone_size = 90.0
 joystick_mode = 1
 
 [node name="Player" parent="." instance=ExtResource("2_nphoj")]
@@ -90,8 +94,10 @@ visible = false
 
 [node name="MobTimer" type="Timer" parent="."]
 
+[node name="AdTimer" type="Timer" parent="."]
+one_shot = true
+
 [node name="HUD" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="ScoreLabel" type="Label" parent="HUD"]
 anchors_preset = 5
@@ -108,9 +114,9 @@ horizontal_alignment = 1
 
 [node name="PauseButton" type="TextureButton" parent="HUD"]
 offset_left = 83.0
-offset_top = 65.0
+offset_top = 77.0
 offset_right = 833.0
-offset_bottom = 965.0
+offset_bottom = 977.0
 scale = Vector2(0.055, 0.055)
 theme = ExtResource("5_yr6rn")
 texture_normal = ExtResource("7_mngyd")
@@ -323,9 +329,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 171.0
+offset_left = 140.0
 offset_top = 109.0
-offset_right = 971.0
+offset_right = 940.0
 offset_bottom = 909.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -409,9 +415,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 90.0
+offset_left = 60.0
 offset_top = -177.0
-offset_right = 392.0
+offset_right = 362.0
 offset_bottom = -123.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -424,9 +430,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 87.0
+offset_left = 60.0
 offset_top = -84.0
-offset_right = 251.0
+offset_right = 224.0
 offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -440,9 +446,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 87.0
+offset_left = 60.0
 offset_top = 16.0
-offset_right = 251.0
+offset_right = 224.0
 offset_bottom = 62.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -462,18 +468,28 @@ offset_bottom = 431.0
 text = "debug"
 autowrap_mode = 1
 
+[node name="InterstitialAd" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("11_a81t3")
+
 [connection signal="add_score" from="Player" to="." method="add_score"]
 [connection signal="game_over" from="Player" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="AdTimer" to="." method="_on_ad_timer_timeout"]
 [connection signal="pressed" from="HUD/PauseButton" to="." method="pause"]
-[connection signal="pressed" from="TitleScreen/StartButton" to="." method="new_game"]
+[connection signal="pressed" from="TitleScreen/StartButton" to="." method="_on_new_game_clicked"]
 [connection signal="pressed" from="TitleScreen/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="toggled" from="TitleScreen/MuteButton" to="." method="_on_mute_button_toggled"]
 [connection signal="pressed" from="Pause/ResumeButton" to="." method="resume"]
 [connection signal="pressed" from="Pause/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="toggled" from="Pause/MuteButton" to="." method="_on_mute_button_toggled"]
 [connection signal="pressed" from="GameOver/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
-[connection signal="pressed" from="GameOver/AgainButton" to="." method="new_game"]
+[connection signal="pressed" from="GameOver/AgainButton" to="." method="_on_new_game_clicked"]
 [connection signal="toggled" from="Options/MuteButton" to="." method="_on_mute_button_toggled"]
 [connection signal="pressed" from="Options/BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="Options/ThemeButton" to="." method="_on_theme_button_pressed"]
+[connection signal="drag_ended" from="Options/MusicSlider" to="." method="_on_music_slider_drag_ended"]
+[connection signal="drag_ended" from="Options/EffectsSlider" to="." method="_on_effects_slider_drag_ended"]

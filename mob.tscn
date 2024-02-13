@@ -6,21 +6,19 @@
 
 [node name="Mob" groups=["mobs"] instance=ExtResource("1_ypxvq")]
 script = ExtResource("2_4lllp")
-min_speed = 20
-max_speed = 150
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." index="2"]
 
 [node name="Blur" type="Sprite2D" parent="." index="3"]
-modulate = Color(1, 1, 1, 0.12549)
+modulate = Color(1, 1, 1, 0.25098)
 texture = ExtResource("3_3fp6r")
 
 [node name="Blur2" type="Sprite2D" parent="Blur" index="0"]
-modulate = Color(1, 1, 1, 0.12549)
+modulate = Color(1, 1, 1, 0.25098)
 texture = ExtResource("3_3fp6r")
 
 [node name="Blur3" type="Sprite2D" parent="Blur" index="1"]
-modulate = Color(1, 1, 1, 0.12549)
+modulate = Color(1, 1, 1, 0.25098)
 texture = ExtResource("3_3fp6r")
 
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_screen_exited"]
