@@ -31,8 +31,6 @@ var full_screen_content_callback := FullScreenContentCallback.new()
 
 var ad_loaded = false
 
-var time_between_ads = 300
-
 # test unit ID: "ca-app-pub-3940256099942544/1033173712"
 var unit_id = "ca-app-pub-3940256099942544/1033173712"
 
@@ -45,7 +43,7 @@ func _ready():
 	full_screen_content_callback.on_ad_dismissed_full_screen_content = func() -> void:
 		$"../DebugText".text = ("ad dismissed")
 		destroy()
-		load_ad()
+		$Loading.visible = false
 		$"..".new_game()
 		
 	full_screen_content_callback.on_ad_failed_to_show_full_screen_content = func(ad_error : AdError) -> void:
@@ -70,14 +68,17 @@ func on_interstitial_ad_loaded(interstitial_ad : InterstitialAd) -> void:
 	
 	$"../DebugText".text = 'ad loaded'
 	ad_loaded = true
-	$"../AdTimer".start(time_between_ads)
+	if not $AdTimer.is_stopped():
+		show_ad()
+	
 
 func show_ad():
 	$"../DebugText".text = 'show clicked'
 	if interstitial_ad:
+		$"..".play_state = $"..".states.AD
 		interstitial_ad.show()
 	else:
-		load_ad()
+		$Loading.visible = false
 		$"..".new_game()
 
 func _on_destroy_pressed():
@@ -92,3 +93,18 @@ func destroy():
 		#DestroyButton.disabled = true
 		#ShowButton.disabled = true
 		#LoadButton.disabled = false
+
+func wait(timeout):
+	$AdTimer.start(timeout)
+	$"../HUD".visible = false
+	$"../TitleScreen".visible = false
+	$"../Pause".visible = false
+	$"../GameOver".visible = false
+	$"../Options".visible = false
+	$Loading.visible = true
+	
+
+func _on_ad_timer_timeout():
+	if not (($"..".play_state == $"..".states.AD) or ($"..".play_state == $"..".states.PLAY)):
+		$Loading.visible = false
+		$"..".new_game()

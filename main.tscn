@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c8u678fwyef7c"]
+[gd_scene load_steps=20 format=3 uid="uid://c8u678fwyef7c"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_efij6"]
 [ext_resource type="PackedScene" uid="uid://coqor2877ks5l" path="res://player.tscn" id="2_nphoj"]
@@ -11,6 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://db0kp35d4jsdp" path="res://speaker-mute.svg" id="8_ffcqt"]
 [ext_resource type="Texture2D" uid="uid://bd4l4txlppda6" path="res://back.svg" id="10_b6s37"]
 [ext_resource type="Script" path="res://InterstitialAd.gd" id="11_a81t3"]
+[ext_resource type="Script" path="res://Music.gd" id="12_nj8h1"]
+[ext_resource type="AudioStream" uid="uid://ta00ym726n1f" path="res://sounds/melody.wav" id="13_e1ogb"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gm1r5"]
 font = ExtResource("6_k03yo")
@@ -94,10 +96,8 @@ visible = false
 
 [node name="MobTimer" type="Timer" parent="."]
 
-[node name="AdTimer" type="Timer" parent="."]
-one_shot = true
-
 [node name="HUD" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="ScoreLabel" type="Label" parent="HUD"]
 anchors_preset = 5
@@ -475,10 +475,40 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("11_a81t3")
 
+[node name="AdTimer" type="Timer" parent="InterstitialAd"]
+wait_time = 5.0
+one_shot = true
+
+[node name="Loading" type="CanvasLayer" parent="InterstitialAd"]
+visible = false
+
+[node name="LoadingLabel" type="Button" parent="InterstitialAd/Loading"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = 123.0
+offset_right = -56.0
+offset_bottom = 177.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "loading...	"
+alignment = 0
+
+[node name="Music" type="Node" parent="."]
+script = ExtResource("12_nj8h1")
+
+[node name="Melody" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("13_e1ogb")
+volume_db = -40.0
+autoplay = true
+
 [connection signal="add_score" from="Player" to="." method="add_score"]
 [connection signal="game_over" from="Player" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
-[connection signal="timeout" from="AdTimer" to="." method="_on_ad_timer_timeout"]
 [connection signal="pressed" from="HUD/PauseButton" to="." method="pause"]
 [connection signal="pressed" from="TitleScreen/StartButton" to="." method="_on_new_game_clicked"]
 [connection signal="pressed" from="TitleScreen/OptionsButton" to="." method="_on_options_button_pressed"]
@@ -493,3 +523,5 @@ script = ExtResource("11_a81t3")
 [connection signal="pressed" from="Options/ThemeButton" to="." method="_on_theme_button_pressed"]
 [connection signal="drag_ended" from="Options/MusicSlider" to="." method="_on_music_slider_drag_ended"]
 [connection signal="drag_ended" from="Options/EffectsSlider" to="." method="_on_effects_slider_drag_ended"]
+[connection signal="timeout" from="InterstitialAd/AdTimer" to="InterstitialAd" method="_on_ad_timer_timeout"]
+[connection signal="pressed" from="InterstitialAd/Loading/LoadingLabel" to="." method="_on_new_game_clicked"]

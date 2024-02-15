@@ -35,7 +35,8 @@ var color_scale = ColorScale.new()
 enum states {
 	STOP,
 	PLAY,
-	PAUSE
+	PAUSE,
+	AD
 }
 var play_state = states.STOP
 
@@ -58,6 +59,11 @@ var last_game_circles = {}
 var effects_vol = 0.8 # scale from 0-1. Children responsible for converting to useful dB scale
 var music_vol = 0.8
 var mute = false
+
+# ads
+var ad_free = false # either purchased or manual override
+var ad_load_timeout = 5.0
+var first_game = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -84,8 +90,9 @@ func _ready():
 	# read save file after everything has been initialized so default values can be overridden
 	read_save()
 	
+	if OS.get_name() != 'Android':
+		ad_free = true
 	MobileAds.initialize()
-	$InterstitialAd.load_ad()
 	
 	
 func read_save():
@@ -189,15 +196,21 @@ func game_over():
 	$GameOver.visible = true
 	$Joystick.visible = false
 	
+	if not ad_free:
+		$InterstitialAd.load_ad()
+	
 	save_game()
 
 func _on_new_game_clicked():
-	if not $AdTimer.time_left: # ad is loaded and timer has run out
-		$DebugText.text = 'show ad'
-		$InterstitialAd.show_ad()
+	if first_game or ad_free:
+		first_game = false
+		new_game()
 		return
 		
-	new_game()
+	if $InterstitialAd.ad_loaded:
+		$InterstitialAd.show_ad()
+	else:
+		$InterstitialAd.wait(ad_load_timeout)
 
 func new_game():
 	$Player.start(screen_size/2, starting_size)
@@ -370,7 +383,3 @@ func _on_main_menu_button_pressed():
 	$Pause.visible = false
 	$GameOver.visible = false
 	$TitleScreen.visible = true
-
-
-func _on_ad_timer_timeout():
-	$DebugText.text = 'ad timer done'

@@ -96,5 +96,5 @@ func fade_out(fade_length):
 func play_pop():
 	if get_node("/root/Main").effects_vol and not get_node("/root/Main").mute:
 		# convert effects volume to dB playback level
-		$PopSound.volume_db = -40 * (1- get_node("/root/Main").effects_vol) - 20
+		$PopSound.volume_db = -40 * (1- get_node("/root/Main").effects_vol) - 10
 		$PopSound.play()

@@ -88,7 +88,7 @@ func _on_down_timer_timeout():
 func play_up():
 	if get_node("/root/Main").effects_vol and not get_node("/root/Main").mute:
 		# convert effects volume to dB playback level
-		$AbsorbUp.volume_db = -40 * (1- get_node("/root/Main").effects_vol) - 20
+		$AbsorbUp.volume_db = get_volume_db()
 		if $UpTimer.is_stopped():
 			$AbsorbUp.play(absorb_up_position)
 		$UpTimer.start(absorb_sound_length)
@@ -96,7 +96,10 @@ func play_up():
 func play_down():
 	if get_node("/root/Main").effects_vol and not get_node("/root/Main").mute:
 		# convert effects volume to dB playback level
-		$AbsorbDown.volume_db = -40 * (1- get_node("/root/Main").effects_vol) - 20
+		$AbsorbDown.volume_db = get_volume_db()
 		if $DownTimer.is_stopped():
 			$AbsorbDown.play(absorb_up_position)
 		$DownTimer.start(absorb_sound_length)
+
+func get_volume_db():
+	return -40 * (1- get_node("/root/Main").effects_vol) - 10
