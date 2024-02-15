@@ -67,6 +67,8 @@ var first_game = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	get_tree().set_quit_on_go_back(false) # keep android back button from quitting game
+	
 	$TitleScreen.visible = true
 	$HUD.visible = false
 	$Options.visible = false
@@ -140,6 +142,8 @@ func _process(delta):
 	# level up and level up transition
 	if $Player.radius > level_threshold and level_time==0:
 		level_time = level_transition_length
+		difficulty.level += 1
+		update_difficulty()
 	
 	if level_time:
 		# transition to next level, frame by frame
@@ -166,12 +170,6 @@ func _process(delta):
 			mob.velocity *= frame_scaling
 			mob.position.x = xmid + frame_scaling * (mob.position.x - xmid)
 			mob.position.y = ymid + frame_scaling * (mob.position.y - ymid)
-		
-		# increment level if this is the last frame of the transition
-		if level_time == 0:
-			difficulty.level += 1
-			update_difficulty
-			
 
 
 func update_difficulty():
@@ -344,6 +342,27 @@ func pause():
 	$MobTimer.paused = true
 	
 
+func _input(event):
+	if event.is_action_pressed("ui_cancel"):
+		_on_esc_pressed()
+
+func _on_esc_pressed():
+	if $Options.visible:
+		_on_back_button_pressed()
+	elif play_state == states.PLAY:
+		pause()
+	elif play_state == states.PAUSE:
+		resume()
+
+func _notification(what):
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		# handle android back button
+		_on_esc_pressed()
+	
+	if (what == NOTIFICATION_APPLICATION_FOCUS_OUT) or (what == NOTIFICATION_APPLICATION_PAUSED):
+		# focus lost (or paused on android)
+		if play_state == states.PLAY:
+			pause()
 
 func add_score(increase):
 	score += increase * score_multiplier
@@ -370,6 +389,8 @@ func score_string(score_num):
 		score_str = str(snapped(score_num,0.1))
 	else:
 		score_str = str(round(score_num))
+		for i in range(score_str.length()-3, 0, -3):
+			score_str = score_str.insert(i, ",")
 	return score_str
 
 
