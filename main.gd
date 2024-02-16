@@ -40,6 +40,13 @@ enum states {
 }
 var play_state = states.STOP
 
+# control schemes for touch/click input
+enum control_styles {
+	FOLLOW, # player circle will move towards where user clicks
+	JOYSTICK # joystick is placed wherever user clicks, drag in the direction you want the player circle to go
+}
+var control_style = control_styles.FOLLOW
+
 # variables related to scoring and level transitions
 var score = 0
 var level = 1
@@ -74,7 +81,7 @@ func _ready():
 	$Options.visible = false
 	$Pause.visible = false
 	$GameOver.visible = false
-	$Joystick.visible = false
+	$Joystick.visible = true
 	
 	screen_size = get_viewport_rect().size
 	get_tree().get_root().size_changed.connect(_screen_size_changed)
@@ -92,8 +99,11 @@ func _ready():
 	# read save file after everything has been initialized so default values can be overridden
 	read_save()
 	
+	# OS-specific settings and ads
 	if OS.get_name() != 'Android':
 		ad_free = true
+		$Options/ControlLabel.text = 'click controls'
+		$Options/WASDLabel.visible = true
 	MobileAds.initialize()
 	
 	
@@ -111,6 +121,8 @@ func read_save():
 				high_score = save_data['high_score']
 			if save_data.has('theme'):
 				set_theme(save_data['theme'])
+			if save_data.has('control_style'):
+				control_style = save_data['control_style']
 			if save_data.has('mute'):
 				mute = save_data['mute']
 				_on_mute_button_toggled(mute, false)
@@ -126,6 +138,7 @@ func save_game():
 	
 	var save_data = high_score_circles
 	save_data['theme'] = color_scale.current_theme
+	save_data['control_style'] = control_style
 	save_data['high_score'] = high_score
 	save_data['mute'] = mute
 	save_data['music_vol'] = music_vol
@@ -211,6 +224,7 @@ func _on_new_game_clicked():
 		$InterstitialAd.wait(ad_load_timeout)
 
 func new_game():
+	$Joystick/VirtualJoystick._reset()
 	$Player.start(screen_size/2, starting_size)
 	difficulty.level = 1
 	update_difficulty()
@@ -317,6 +331,26 @@ func set_theme(theme):
 	$Background.color = color_scale.background_color
 	$Player.update_color()
 	get_tree().call_group('mobs', 'update_color')
+
+func _on_control_button_pressed():
+	var num_styles = len(control_styles)
+	for style in control_styles:
+		if control_style == control_styles[style]:
+			set_control_style((control_styles[style]+1)%num_styles)
+			#$Options/ControlButton.text = (control_styles[style]+1)%num_styles
+			#control_style = (control_styles[style]+1)%num_styles
+			break
+	save_game()
+	
+func set_control_style(style):
+	control_style = style
+	
+	if style == control_styles.FOLLOW:
+		$Options/ControlButton.text = 'follow'
+		$Joystick/VirtualJoystick.joystick_mode = $Joystick/VirtualJoystick.Joystick_mode.PLAYER
+	elif style == control_styles.JOYSTICK:
+		$Options/ControlButton.text = 'joystick'
+		$Joystick/VirtualJoystick.joystick_mode = $Joystick/VirtualJoystick.Joystick_mode.DYNAMIC
 
 func _on_back_button_pressed():
 	$Options.visible = false

@@ -39,19 +39,18 @@ func _ready():
 	interstitial_ad_load_callback.on_ad_loaded = on_interstitial_ad_loaded
 
 	full_screen_content_callback.on_ad_clicked = func() -> void:
-		print("on_ad_clicked")
+		pass
 	full_screen_content_callback.on_ad_dismissed_full_screen_content = func() -> void:
-		$"../DebugText".text = ("ad dismissed")
 		destroy()
 		$Loading.visible = false
 		$"..".new_game()
 		
 	full_screen_content_callback.on_ad_failed_to_show_full_screen_content = func(ad_error : AdError) -> void:
-		print("on_ad_failed_to_show_full_screen_content")
+		pass
 	full_screen_content_callback.on_ad_impression = func() -> void:
-		print("on_ad_impression")
+		pass
 	full_screen_content_callback.on_ad_showed_full_screen_content = func() -> void:
-		print("on_ad_showed_full_screen_content")
+		pass
 
 func load_ad():
 	$"../DebugText".text = 'load clicked'
@@ -62,20 +61,16 @@ func on_interstitial_ad_failed_to_load(adError : LoadAdError) -> void:
 	destroy()
 	
 func on_interstitial_ad_loaded(interstitial_ad : InterstitialAd) -> void:
-	print("interstitial ad loaded" + str(interstitial_ad._uid))
 	interstitial_ad.full_screen_content_callback = full_screen_content_callback
 	self.interstitial_ad = interstitial_ad
 	
-	$"../DebugText".text = 'ad loaded'
 	ad_loaded = true
 	if not $AdTimer.is_stopped():
 		show_ad()
 	
 
 func show_ad():
-	$"../DebugText".text = 'show clicked'
 	if interstitial_ad:
-		$"..".play_state = $"..".states.AD
 		interstitial_ad.show()
 	else:
 		$Loading.visible = false

@@ -50,3 +50,8 @@ grow_vertical = 2
 pivot_offset = Vector2(50, 50)
 texture = ExtResource("3_2imxl")
 stretch_mode = 5
+
+[node name="LoadTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+autostart = true

@@ -30,20 +30,10 @@ func _process(delta):
 	# translate user input into player movement
 	var accel = Vector2.ZERO
 	
-	# WASD added to built-in up/down/left/right actions
-	if Input.is_action_pressed("ui_up"):
-		accel += Vector2.UP
-	if Input.is_action_pressed("ui_down"):
-		accel += Vector2.DOWN
-	if Input.is_action_pressed("ui_left"):
-		accel += Vector2.LEFT
-	if Input.is_action_pressed("ui_right"):
-		accel += Vector2.RIGHT
+	# WASD and virtual joystick mapped to ui_left/right/down/up
+	accel = Input.get_vector('ui_left','ui_right','ui_up','ui_down')
 	
-	if accel.length() > 0:
-		accel = accel.normalized() * move_speed
-		
-	velocity += accel - velocity * friction
+	velocity += accel * move_speed - velocity * friction
 	
 
 func set_radius(new_radius):

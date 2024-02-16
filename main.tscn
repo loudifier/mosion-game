@@ -78,7 +78,7 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="Virtual Joystick" parent="Joystick" instance=ExtResource("4_7titn")]
+[node name="VirtualJoystick" parent="Joystick" instance=ExtResource("4_7titn")]
 layout_mode = 1
 anchors_preset = 0
 anchor_top = 0.0
@@ -89,7 +89,7 @@ offset_bottom = 8192.0
 grow_vertical = 1
 pressed_color = Color(1, 1, 1, 1)
 clampzone_size = 90.0
-joystick_mode = 1
+joystick_mode = 3
 
 [node name="Player" parent="." instance=ExtResource("2_nphoj")]
 visible = false
@@ -257,6 +257,7 @@ texture_normal = ExtResource("7_2jboq")
 texture_pressed = ExtResource("8_ffcqt")
 
 [node name="GameOver" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="MainMenuButton" type="Button" parent="GameOver"]
 anchors_preset = 8
@@ -321,7 +322,6 @@ theme = ExtResource("5_yr6rn")
 text = "high score: "
 
 [node name="Options" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="MuteButton" type="TextureButton" parent="Options"]
 anchors_preset = 8
@@ -456,6 +456,53 @@ scale = Vector2(1.5, 1.5)
 theme = SubResource("Theme_a81xs")
 value = 70.0
 
+[node name="ControlLabel" type="Label" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -277.0
+offset_right = 12.0
+offset_bottom = -223.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "control style"
+
+[node name="WASDLabel" type="Label" parent="Options"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -227.0
+offset_right = 12.0
+offset_bottom = -173.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+theme_override_font_sizes/font_size = 26
+text = "(plus arrows, WASD)"
+
+[node name="ControlButton" type="LinkButton" parent="Options"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 60.0
+offset_top = -277.0
+offset_right = 362.0
+offset_bottom = -223.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "follow"
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_6pe36")
 
@@ -523,5 +570,6 @@ autoplay = true
 [connection signal="pressed" from="Options/ThemeButton" to="." method="_on_theme_button_pressed"]
 [connection signal="drag_ended" from="Options/MusicSlider" to="." method="_on_music_slider_drag_ended"]
 [connection signal="drag_ended" from="Options/EffectsSlider" to="." method="_on_effects_slider_drag_ended"]
+[connection signal="pressed" from="Options/ControlButton" to="." method="_on_control_button_pressed"]
 [connection signal="timeout" from="InterstitialAd/AdTimer" to="InterstitialAd" method="_on_ad_timer_timeout"]
 [connection signal="pressed" from="InterstitialAd/Loading/LoadingLabel" to="." method="_on_new_game_clicked"]
