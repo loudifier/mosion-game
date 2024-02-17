@@ -122,7 +122,7 @@ func read_save():
 			if save_data.has('theme'):
 				set_theme(save_data['theme'])
 			if save_data.has('control_style'):
-				control_style = save_data['control_style']
+				set_control_style(save_data['control_style'])
 			if save_data.has('mute'):
 				mute = save_data['mute']
 				_on_mute_button_toggled(mute, false)
@@ -232,7 +232,9 @@ func new_game():
 	$Joystick.visible = true
 	$TitleScreen.visible = false
 	$GameOver.visible = false
+	$Pause.visible = false
 	get_tree().call_group('mobs', 'fade_delete')
+	$MobTimer.start()
 	score = 0
 	$HUD/ScoreLabel.text = str(0)
 	score_multiplier = 1.0
@@ -285,6 +287,7 @@ func randf_new_mob_radius():
 func _on_options_button_pressed():
 	$TitleScreen.visible = false
 	$Pause.visible = false
+	show_confirm(false)
 	$Options.visible = true
 	
 
@@ -337,14 +340,11 @@ func _on_control_button_pressed():
 	for style in control_styles:
 		if control_style == control_styles[style]:
 			set_control_style((control_styles[style]+1)%num_styles)
-			#$Options/ControlButton.text = (control_styles[style]+1)%num_styles
-			#control_style = (control_styles[style]+1)%num_styles
 			break
 	save_game()
 	
 func set_control_style(style):
 	control_style = style
-	
 	if style == control_styles.FOLLOW:
 		$Options/ControlButton.text = 'follow'
 		$Joystick/VirtualJoystick.joystick_mode = $Joystick/VirtualJoystick.Joystick_mode.PLAYER
@@ -366,6 +366,7 @@ func resume():
 	$HUD/PauseButton.visible = true
 	$Joystick.visible = true
 	$MobTimer.paused = false
+	show_confirm(false)
 
 
 func pause():
@@ -375,6 +376,23 @@ func pause():
 	$Joystick.visible = false
 	$MobTimer.paused = true
 	
+func _on_new_button_pressed():
+	show_confirm(true)
+	
+func show_confirm(show_confirm):
+	$Pause/NewButton.visible = !show_confirm
+	$Pause/ConfirmLabel.visible = show_confirm
+	$Pause/YesButton.visible = show_confirm
+	$Pause/NoButton.visible = show_confirm
+	
+func _on_yes_button_pressed():
+	show_confirm(false)
+	$HUD/PauseButton.visible = true
+	$MobTimer.paused = false
+	_on_new_game_clicked()
+	
+func _on_no_button_pressed():
+	show_confirm(false)
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
@@ -386,7 +404,10 @@ func _on_esc_pressed():
 	elif play_state == states.PLAY:
 		pause()
 	elif play_state == states.PAUSE:
-		resume()
+		if $Pause/ConfirmLabel.visible:
+			show_confirm(false)
+		else:
+			resume()
 
 func _notification(what):
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
@@ -438,3 +459,4 @@ func _on_main_menu_button_pressed():
 	$Pause.visible = false
 	$GameOver.visible = false
 	$TitleScreen.visible = true
+

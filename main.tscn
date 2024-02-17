@@ -93,6 +93,7 @@ joystick_mode = 3
 
 [node name="Player" parent="." instance=ExtResource("2_nphoj")]
 visible = false
+glow = 20.0
 
 [node name="MobTimer" type="Timer" parent="."]
 
@@ -205,7 +206,6 @@ texture_normal = ExtResource("7_2jboq")
 texture_pressed = ExtResource("8_ffcqt")
 
 [node name="Pause" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="ResumeButton" type="Button" parent="Pause"]
 anchors_preset = 8
@@ -221,6 +221,72 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "resume"
+alignment = 0
+
+[node name="NewButton" type="Button" parent="Pause"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -295.5
+offset_top = 485.0
+offset_right = 49.5
+offset_bottom = 539.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "start new game"
+alignment = 0
+
+[node name="ConfirmLabel" type="Label" parent="Pause"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -295.5
+offset_top = 385.0
+offset_right = 49.5
+offset_bottom = 439.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "are you sure?"
+
+[node name="YesButton" type="Button" parent="Pause"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -295.5
+offset_top = 485.0
+offset_right = -220.5
+offset_bottom = 539.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "yes"
+alignment = 0
+
+[node name="NoButton" type="Button" parent="Pause"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -110.0
+offset_top = 485.0
+offset_right = -49.0
+offset_bottom = 539.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_yr6rn")
+text = "no"
 alignment = 0
 
 [node name="OptionsButton" type="Button" parent="Pause"]
@@ -322,6 +388,7 @@ theme = ExtResource("5_yr6rn")
 text = "high score: "
 
 [node name="Options" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="MuteButton" type="TextureButton" parent="Options"]
 anchors_preset = 8
@@ -561,6 +628,9 @@ autoplay = true
 [connection signal="pressed" from="TitleScreen/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="toggled" from="TitleScreen/MuteButton" to="." method="_on_mute_button_toggled"]
 [connection signal="pressed" from="Pause/ResumeButton" to="." method="resume"]
+[connection signal="pressed" from="Pause/NewButton" to="." method="_on_new_button_pressed"]
+[connection signal="pressed" from="Pause/YesButton" to="." method="_on_yes_button_pressed"]
+[connection signal="pressed" from="Pause/NoButton" to="." method="_on_no_button_pressed"]
 [connection signal="pressed" from="Pause/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="toggled" from="Pause/MuteButton" to="." method="_on_mute_button_toggled"]
 [connection signal="pressed" from="GameOver/MainMenuButton" to="." method="_on_main_menu_button_pressed"]

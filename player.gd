@@ -1,6 +1,9 @@
 extends "res://circle.gd"
 
 @export var outline = 3.0
+@export var glow = 20.0
+
+var glow_base_radius = 100.0/2
 
 @export var move_speed = 10
 @export var friction = 0.01
@@ -39,15 +42,28 @@ func _process(delta):
 func set_radius(new_radius):
 	if new_radius > radius and get_node("/root/Main").play_state == get_node("/root/Main").states.PLAY:
 		add_score.emit(new_radius - radius)
-	super.set_radius(new_radius)
-	get_node("/root/Main").update_difficulty()
+	
+	super.set_radius(new_radius) # sets color and outline radius
+	
 	var fill_radius = radius - outline
 	$Fill.scale = Vector2.ONE * (fill_radius / radius)
-	$Outline/Outline2.scale = Vector2.ONE * (radius - outline*2/3) / radius
-	$Outline/Outline3.scale = Vector2.ONE * (radius - outline/3) / radius
+	
+	var glow_radius = radius + glow
+	$Glow.scale = Vector2.ONE * (glow_radius / radius) * (base_radius/glow_base_radius)
+	
+	get_node("/root/Main").update_difficulty()
+	
 	if not radius:
 		game_over.emit()
 
+# override update color to not change color of glow
+func update_color():
+	var alpha = $Fill.get_modulate().a
+	var color = get_node("/root/Main").color_scale.get_color(radius)
+	color.a = alpha
+	$Fill.set_modulate(color)
+	$Outline.set_modulate(color)
+	$Glow.set_modulate(Color(1,1,1,alpha*0.15))
 
 func start(start_position, starting_radius = 50.0):
 	position = start_position
