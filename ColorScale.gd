@@ -9,7 +9,11 @@ var current_theme
 enum themes {
 	EMOSIONAL,
 	BRUTALIST,
-	FESTIVUS
+	FESTIVUS,
+	PRIDE,
+	MILLENNIAL,
+	MONAURAL,
+	SAILGATING
 }
 
 func set_theme(theme):
@@ -17,24 +21,10 @@ func set_theme(theme):
 	if theme == themes.EMOSIONAL:
 		# defult pastel blue-yellow-red colors
 		theme_name = 'emosional'
-		#colors = [Color('#8CD9F5'), Color('#FFF785'), Color('#F06565')]
-		
-		# extra colors inserted for better interpolation using https://facelessuser.github.io/coloraide with 'lch' space
-		#colors = [Color('#8CD9F5'), \
-		#		  Color('#A3F9B1'), \
-		#		  Color('#FFF785'), \
-		#		  Color('#FFEA7B'), \
-		#		  Color('#FFBB64'), \
-		#		  Color('#F97C61'), \
-		#		  Color('#F06565'), \
-		#		  Color('#F66885'), \
-		#		  Color('#A8B6FF')]
-		# ...nevermind. 3-color spectrum might be too busy
-		
 		# yellow-red scale. Extra points along red end of spectrum for better balance
-		colors = [Color('#FFF785'), \
-				  Color('#FFC767'), \
-				  Color('#F87A61'), \
+		colors = [Color('#FFF785'),
+				  Color('#FFC767'),
+				  Color('#F87A61'),
 				  Color('#F06565')]
 		background_color = Color('#78A1B0')
 		
@@ -50,6 +40,45 @@ func set_theme(theme):
 		colors = [Color('#165B33'), Color('#BB2528')]
 		background_color = Color('#BA9E56')
 		
+	if theme == themes.PRIDE:
+		# colors from HRC website
+		theme_name = 'pride'
+		# double each color to minimize transitions between main colors
+		colors = [Color('#E40203'),Color('#E40203'),
+				  Color('#FF8B00'),Color('#FF8B00'),
+				  Color('#FEED00'),Color('#FEED00'),
+				  Color('#008024'),Color('#008024'),
+				  Color('#004DFF'),Color('#004DFF'),
+				  Color('#750686'),Color('#750686')]
+		# no (non-white) background color seems to be most common. Using a dark desaturated purple because it looks decent
+		background_color = Color('#5C5170')
+		
+	if theme == themes.MILLENNIAL:
+		theme_name = 'millennial'
+		colors = [Color('#D5F7C6'),
+				  Color('#CBF7F8'),
+				  Color('#926AFF'),
+				  Color('#FF926B'),
+				  Color('#926AFF')]
+		background_color = Color('#E0B8B8')
+		
+	if theme == themes.MONAURAL:
+		theme_name = 'monaural'
+		colors = [Color('#9FBDDD'),
+				  Color('white'),
+				  Color('EFE27C'),
+				  Color('#D3C45F')]
+		background_color = Color('#21234D')
+		
+	if theme == themes.SAILGATING:
+		theme_name = 'sailgating'
+		colors = [Color('#4B2E83'),
+				  Color('#8371BC'),
+				  Color('#B7A57A'),
+				  Color('#85754D'),
+				  Color('#B7A57A'),
+				  Color('#8371BC')]
+		background_color = Color('#444444')
 		
 func get_color(color_scale_position):
 	var num_colors = len(colors)
@@ -72,6 +101,7 @@ func get_color(color_scale_position):
 
 
 # color conversion adapted from python colorsys module
+# not actually used, but could come in handy
 func rgb_to_hls(r, g, b):
 	var maxc = max(r, g, b)
 	var minc = min(r, g, b)
