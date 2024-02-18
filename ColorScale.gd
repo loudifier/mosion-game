@@ -36,7 +36,7 @@ func set_theme(theme):
 				  Color('#FFC767'), \
 				  Color('#F87A61'), \
 				  Color('#F06565')]
-		background_color = Color('#5C747D')
+		background_color = Color('#78A1B0')
 		
 	if theme == themes.BRUTALIST:
 		# grayscale

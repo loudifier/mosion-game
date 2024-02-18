@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c8u678fwyef7c"]
+[gd_scene load_steps=21 format=3 uid="uid://c8u678fwyef7c"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_efij6"]
 [ext_resource type="PackedScene" uid="uid://coqor2877ks5l" path="res://player.tscn" id="2_nphoj"]
@@ -13,6 +13,8 @@
 [ext_resource type="Script" path="res://InterstitialAd.gd" id="11_a81t3"]
 [ext_resource type="Script" path="res://Music.gd" id="12_nj8h1"]
 [ext_resource type="AudioStream" uid="uid://ta00ym726n1f" path="res://sounds/melody.wav" id="13_e1ogb"]
+[ext_resource type="AudioStream" uid="uid://cpi4o6dryt4nm" path="res://sounds/drum-bass.wav" id="14_furow"]
+[ext_resource type="AudioStream" uid="uid://c2516enli8tbh" path="res://sounds/ambient.wav" id="15_wjfoq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_gm1r5"]
 font = ExtResource("6_k03yo")
@@ -53,11 +55,6 @@ expand_margin_bottom = 2.0
 [sub_resource type="Theme" id="Theme_a81xs"]
 HSlider/styles/slider = SubResource("StyleBoxFlat_b78kf")
 
-[sub_resource type="Environment" id="Environment_6pe36"]
-background_mode = 3
-glow_blend_mode = 4
-glow_hdr_threshold = 0.75
-
 [node name="Main" type="Node2D"]
 script = ExtResource("1_efij6")
 mob_scene = ExtResource("3_bcq41")
@@ -70,7 +67,7 @@ offset_right = 3840.0
 offset_bottom = 3840.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.2, 0.2, 0.2, 1)
+color = Color(0.33, 0.33, 0.33, 1)
 
 [node name="Joystick" type="Control" parent="."]
 layout_mode = 3
@@ -93,7 +90,6 @@ joystick_mode = 3
 
 [node name="Player" parent="." instance=ExtResource("2_nphoj")]
 visible = false
-glow = 20.0
 
 [node name="MobTimer" type="Timer" parent="."]
 
@@ -123,7 +119,6 @@ theme = ExtResource("5_yr6rn")
 texture_normal = ExtResource("7_mngyd")
 
 [node name="TitleScreen" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="StartButton" type="Button" parent="TitleScreen"]
 anchors_preset = 8
@@ -206,6 +201,7 @@ texture_normal = ExtResource("7_2jboq")
 texture_pressed = ExtResource("8_ffcqt")
 
 [node name="Pause" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="ResumeButton" type="Button" parent="Pause"]
 anchors_preset = 8
@@ -570,9 +566,6 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "follow"
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_6pe36")
-
 [node name="DebugText" type="Label" parent="."]
 visible = false
 offset_left = 60.0
@@ -619,6 +612,14 @@ script = ExtResource("12_nj8h1")
 stream = ExtResource("13_e1ogb")
 volume_db = -40.0
 autoplay = true
+
+[node name="DrumBass" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("14_furow")
+volume_db = -40.0
+
+[node name="Ambient" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("15_wjfoq")
+volume_db = -40.0
 
 [connection signal="add_score" from="Player" to="." method="add_score"]
 [connection signal="game_over" from="Player" to="." method="game_over"]

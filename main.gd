@@ -106,6 +106,9 @@ func _ready():
 		$Options/WASDLabel.visible = true
 	MobileAds.initialize()
 	
+	# uncomment when creating a new icon
+	#draw_icon()
+	
 	
 func read_save():
 	var f = FileAccess.open(save_file, FileAccess.READ)
@@ -251,6 +254,16 @@ func _on_mob_timer_timeout():
 	# spawn mob with a randomized size
 	mob.spawn(randf_new_mob_radius(), mob_min_speed, mob_max_speed)
 	
+	
+func draw_icon():
+	# position static player and enemy circles to get a screenshot for creating an updated icon
+	$TitleScreen.visible = false
+	$MobTimer.paused = true
+	$Player.start(screen_size/2, 60)
+	var mob = mob_scene.instantiate()
+	add_child(mob)
+	mob.spawn(25, 0, 0)
+	mob.position = Vector2($Player.position.x - 70, $Player.position.y - 70)
 	
 func randf_weighted(bias_value, weight=2):
 	# generates a random number from 0-1 with a weighted probability distribution
