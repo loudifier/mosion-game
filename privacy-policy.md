@@ -6,6 +6,12 @@ This Privacy Policy describes Our policies and procedures on the collection, use
 
 We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of the [Free Privacy Policy Generator](https://www.freeprivacypolicy.com/free-privacy-policy-generator/).
 
+
+# Plain English
+At time of writing mosion does not itself intentionally transmit or store any personally-identifiable user information. At some point in the future the game may transmit and store the player's high score in a global leaderboard, along with a randomly-generated unique identifier and a username entered by the player or provided to the Godot game engine or third-party plugin from the host system.
+
+mosion uses Google AdMob and/or AdSense to serve advertisements. Please refer to [Google's Privacy Policy](https://policies.google.com/privacy), and [Google's Partner Privacy Policy](https://policies.google.com/technologies/partner-sites) for details on how Google handles personal advertising. You can also adjust ad settings for your Google account at the [Google Ad Center](https://myadcenter.google.com/home).
+
 ## Interpretation and Definitions
 
 ### Interpretation
