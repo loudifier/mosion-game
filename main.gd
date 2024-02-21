@@ -259,11 +259,13 @@ func draw_icon():
 	# position static player and enemy circles to get a screenshot for creating an updated icon
 	$TitleScreen.visible = false
 	$MobTimer.paused = true
-	$Player.start(screen_size/2, 60)
+	$Player.start(screen_size/2, 180)
+	level_threshold = $Player.radius *2
 	var mob = mob_scene.instantiate()
 	add_child(mob)
-	mob.spawn(25, 0, 0)
-	mob.position = Vector2($Player.position.x - 70, $Player.position.y - 70)
+	mob.spawn(75, 0, 0)
+	var offset = 160
+	mob.position = Vector2($Player.position.x + offset, $Player.position.y + offset)
 	
 func randf_weighted(bias_value, weight=2):
 	# generates a random number from 0-1 with a weighted probability distribution

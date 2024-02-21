@@ -12,8 +12,10 @@ config_version=5
 
 config/name="mosion"
 config/description="Be a circle. Absorb circles. Grow."
+config/version="1.0"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
+boot_splash/bg_color=Color(0.470588, 0.631373, 0.690196, 1)
 boot_splash/image="res://icon.png"
 config/icon="res://icon.png"
 
