@@ -9,7 +9,7 @@ mosion was built using Godot 4, can be compiled to run on almost any host system
 
 ## Inspiration
 
-mosion was motivated by a desire to capture the feel of janky but addictive flash games of the noughties and mobile games of the 2010's. The closest reference for most players will be the Cell Stage of Spore, but the gameplay is closer to Fishy or the Neopets game Jelly Blobs of Doom. The absorption mechanic and overall vibe of mosion aims to be a spiritual predecessor to Osmos. If you haven't played Osmos, drop whatever you are doing and play it now.
+mosion was motivated by a desire to capture the feel of janky but addictive flash games of the noughties and early mobile games. The closest reference for most players will be the Cell Stage of Spore, but the gameplay is closer to Fishy or the Neopets game Jelly Blobs of Doom. The absorption mechanic and overall vibe of mosion aims to be a spiritual predecessor to Osmos. If you haven't played Osmos, drop whatever you are doing and play it now.
 
 Pseudolegalese: mosion (and Loudifier) and is not affiliated with any other game, studio, or publisher.
 
