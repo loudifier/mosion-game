@@ -15,9 +15,9 @@ Pseudolegalese: mosion (and Loudifier) and is not affiliated with any other game
 
 ## Play mosion
 
-mosion will soon be available on Google Play in both ad-supported and ad-free versions. iOS may come soon, if I can justify the cost of an Apple developer's licence and a cheap Mac.
+mostion is avaialable for $1 for Windows and Android at [loudifier.itch.io/mosion](https://loudifier.itch.io/mosion)
 
-I plan to launch a browser version soon, and a Windows executable may be made available at some point via itch.io or Steam.
+I am in the process of getting mosion approved on Google Play, where it will be available for Android in both ad-supported and ad-free versions. iOS may come soon, if I can justify the cost of an Apple developer's licence and a cheap Mac.
 
 To play mosion for free without ads:
 - Clone this repo
