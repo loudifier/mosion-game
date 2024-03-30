@@ -100,7 +100,7 @@ func _ready():
 	read_save()
 	
 	# OS-specific settings and ads
-	if OS.get_name() != 'Android':
+	if (OS.get_name() != 'Android') and (OS.get_name() != 'iOS'):
 		ad_free = true
 		$Options/ControlLabel.text = 'click controls'
 		$Options/WASDLabel.visible = true
@@ -429,8 +429,8 @@ func _notification(what):
 		# handle android back button
 		_on_esc_pressed()
 	
-	if (what == NOTIFICATION_APPLICATION_FOCUS_OUT) or (what == NOTIFICATION_APPLICATION_PAUSED):
-		# focus lost (or paused on android)
+	if (what == NOTIFICATION_APPLICATION_FOCUS_OUT) or (what == NOTIFICATION_APPLICATION_PAUSED) or (what == NOTIFICATION_WM_WINDOW_FOCUS_OUT):
+		# focus lost (or paused on android) (or wm_focus on iOS)
 		if play_state == states.PLAY:
 			pause()
 

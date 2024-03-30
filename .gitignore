@@ -1,0 +1,25 @@
+# Godot 4+ specific ignores
+.godot/
+
+test
+.gitattributes
+.gitignore
+
+*.apk*
+*.aab*
+*.exe
+
+# not sure what .pck is, something to do with Windows compilation?
+*.pck
+
+android/
+
+todo.txt
+
+addons/
+
+# Mac stuff
+.DS_Store
+*.xc*
+ios/
+xcode/
