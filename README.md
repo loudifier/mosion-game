@@ -9,7 +9,7 @@ mosion was built using Godot 4, can be compiled to run on almost any host system
 
 ## Inspiration
 
-mosion was motivated by a desire to capture the feel of janky but addictive flash games of the noughties and early mobile games. The closest reference for most players will be the Cell Stage of Spore, but the gameplay is closer to Fishy or the Neopets game Jelly Blobs of Doom.
+mosion was motivated by a desire to capture the feel of early mobile games and janky but addictive flash games of the noughties. The closest reference for most players will be the Cell Stage of Spore, but the gameplay is closer to Fishy or the Neopets game Jelly Blobs of Doom.
 
 ![demo gif](img/demo.gif)
 
@@ -19,9 +19,7 @@ Pseudolegalese: mosion (and Loudifier) is not affiliated with any other game, st
 
 ## Play mosion
 
-mostion is avaialable for $1 for Windows and Android at [loudifier.itch.io/mosion](https://loudifier.itch.io/mosion)
-
-I am in the process of getting mosion approved on Google Play, where it will be available for Android in both ad-supported and ad-free versions. iOS may come soon, if I can justify the cost of an Apple developer's licence and a cheap Mac.
+mosion is avaialable for free with ads on the [App Store](https://apps.apple.com/app/id6480231114) and [Google Play](https://play.google.com/store/apps/details?id=com.loudifier.mosion&pcampaignid=web_share). Alternatively, you can get an ad-free version for $1 for Windows and Android at [itch.io](https://loudifier.itch.io/mosion).
 
 To play mosion for free without ads:
 - Clone this repo
