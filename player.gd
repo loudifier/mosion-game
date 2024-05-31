@@ -36,7 +36,8 @@ func _process(delta):
 	# WASD and virtual joystick mapped to ui_left/right/down/up
 	accel = Input.get_vector('ui_left','ui_right','ui_up','ui_down')
 	
-	velocity += accel * move_speed - velocity * friction
+	if get_node("/root/Main").play_state == get_node("/root/Main").states.PLAY:
+		velocity += accel * move_speed - velocity * friction
 	
 
 func set_radius(new_radius):
