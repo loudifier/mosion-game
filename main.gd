@@ -135,6 +135,35 @@ func read_save():
 			if save_data.has('effects_vol'):
 				effects_vol = save_data['effects_vol']
 				$Options/EffectsSlider.set_value_no_signal(100*effects_vol)
+			
+			if save_data.has('suspended'):
+				if save_data['suspended']:
+					new_game()
+					play_state = states.PAUSE
+					
+					add_score(save_data['score'])
+					
+					$Player.set_radius(save_data['player']['radius'])
+					$Player.position.x = save_data['player']['pos_x']
+					$Player.position.y = save_data['player']['pos_y']
+					$Player.velocity.x = save_data['player']['vel_x']
+					$Player.velocity.y = save_data['player']['vel_y']
+					
+					difficulty.level = save_data['level']
+					update_difficulty()
+					score_multiplier = save_data['score_multiplier']
+					level_time = save_data['level_time']
+					
+					for saved_mob in save_data['mobs']:
+						var mob = mob_scene.instantiate()
+						add_child(mob)
+						mob.spawn(saved_mob['radius'], 0, 0)
+						mob.position.x = saved_mob['pos_x']
+						mob.position.y = saved_mob['pos_y']
+						mob.velocity.x = saved_mob['vel_x']
+						mob.velocity.y = saved_mob['vel_y']
+					
+					pause()
 
 func save_game():
 	var f = FileAccess.open(save_file, FileAccess.WRITE)
@@ -146,6 +175,36 @@ func save_game():
 	save_data['mute'] = mute
 	save_data['music_vol'] = music_vol
 	save_data['effects_vol'] = effects_vol
+	
+	# save current game state to resume if app is closed
+	if play_state == states.PAUSE:
+		save_data['suspended'] = true
+		
+		save_data['score'] = score
+		save_data['level'] = difficulty.level
+		save_data['score_multiplier'] = score_multiplier
+		save_data['level_time'] = level_time
+		
+		save_data['player'] = {
+		'radius' = $Player.radius,
+		'pos_x' = $Player.position.x,
+		'pos_y' = $Player.position.y,
+		'vel_x' = $Player.velocity.x,
+		'vel_y' = $Player.velocity.y
+		}
+		save_data['mobs'] = []
+		for mob in get_tree().get_nodes_in_group('mobs'):
+			save_data['mobs'].append({
+				'radius' = mob.radius,
+				'pos_x' = mob.position.x,
+				'pos_y' = mob.position.y,
+				'vel_x' = mob.velocity.x,
+				'vel_y' = mob.velocity.y
+		})
+		
+	else:
+		save_data['suspended'] = false
+		
 	
 	var json_str = JSON.stringify(save_data)
 	f.store_line(json_str)
@@ -161,7 +220,7 @@ func _process(delta):
 		difficulty.level += 1
 		update_difficulty()
 	
-	if level_time:
+	if level_time and play_state == states.PLAY:
 		# transition to next level, frame by frame
 		level_time = max(level_time - delta, 0)
 		
@@ -390,6 +449,8 @@ func pause():
 	$HUD/PauseButton.visible = false
 	$Joystick.visible = false
 	$MobTimer.paused = true
+	
+	save_game()
 	
 func _on_new_button_pressed():
 	show_confirm(true)
