@@ -5,7 +5,7 @@ extends Node
 
 var last_playback_position = 0
 
-const FADE_TIME = 2.0  # seconds for full fade in/out
+const FADE_TIME = 4.0  # seconds for full fade in/out
 
 func _process(delta):
 	if get_node("/root/Main").mute or not get_node("/root/Main").music_vol:

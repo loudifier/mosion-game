@@ -73,6 +73,7 @@ func start(start_position, starting_radius = 50.0):
 	visible = true
 	absorbable = true
 	fade_in(2.0)
+	reset_physics_interpolation()
 
 func absorb(enemy):
 	super.absorb(enemy)

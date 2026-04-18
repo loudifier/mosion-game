@@ -54,6 +54,8 @@ func spawn(spawn_radius, min_speed, max_speed):
 	# enable absorption
 	absorbable = true
 	
+	reset_physics_interpolation()
+	
 
 func _on_screen_exited():
 	#despawn mob when it goes off screen

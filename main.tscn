@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c8u678fwyef7c"]
 
-[ext_resource type="Script" uid="uid://bx7mnyoq1j6vw" path="res://main.gd" id="1_efij6"]
+[ext_resource type="Script" uid="uid://cpa7cuoqdne4p" path="res://main.gd" id="1_efij6"]
 [ext_resource type="PackedScene" uid="uid://coqor2877ks5l" path="res://player.tscn" id="2_nphoj"]
 [ext_resource type="PackedScene" uid="uid://dmghftj3kythu" path="res://mob.tscn" id="3_bcq41"]
 [ext_resource type="PackedScene" uid="uid://dconwhb5c3goe" path="res://joystick/virtual_joystick.tscn" id="4_7titn"]
@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://32btv876nlk6" path="res://pause.svg" id="7_mngyd"]
 [ext_resource type="Texture2D" uid="uid://db0kp35d4jsdp" path="res://speaker-mute.svg" id="8_ffcqt"]
 [ext_resource type="Texture2D" uid="uid://bd4l4txlppda6" path="res://back.svg" id="10_b6s37"]
-[ext_resource type="Script" uid="uid://ynlnukp4r44d" path="res://Music.gd" id="12_nj8h1"]
+[ext_resource type="Script" uid="uid://umdpg2aho65p" path="res://Music.gd" id="12_nj8h1"]
 [ext_resource type="AudioStream" uid="uid://ta00ym726n1f" path="res://sounds/melody.wav" id="13_e1ogb"]
 [ext_resource type="AudioStream" uid="uid://cpi4o6dryt4nm" path="res://sounds/drum-bass.wav" id="14_furow"]
 [ext_resource type="AudioStream" uid="uid://c2516enli8tbh" path="res://sounds/ambient.wav" id="15_wjfoq"]

@@ -23,6 +23,10 @@ boot_splash/bg_color=Color(0.470588, 0.631373, 0.690196, 1)
 boot_splash/image="res://icon.png"
 config/icon="res://icon.png"
 
+[audio]
+
+general/default_playback_type.web=0
+
 [display]
 
 window/size/viewport_width=720
@@ -73,6 +77,10 @@ ui_down={
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[physics]
+
+common/physics_interpolation=true
 
 [rendering]
 
