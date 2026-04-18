@@ -23,7 +23,7 @@ func _ready():
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _physics_process(delta):
 	if get_node("/root/Main").play_state != get_node("/root/Main").states.PAUSE:
 		position += velocity * delta
 	

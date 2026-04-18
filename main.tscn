@@ -1,6 +1,6 @@
-[gd_scene load_steps=21 format=3 uid="uid://c8u678fwyef7c"]
+[gd_scene format=3 uid="uid://c8u678fwyef7c"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_efij6"]
+[ext_resource type="Script" uid="uid://bx7mnyoq1j6vw" path="res://main.gd" id="1_efij6"]
 [ext_resource type="PackedScene" uid="uid://coqor2877ks5l" path="res://player.tscn" id="2_nphoj"]
 [ext_resource type="PackedScene" uid="uid://dmghftj3kythu" path="res://mob.tscn" id="3_bcq41"]
 [ext_resource type="PackedScene" uid="uid://dconwhb5c3goe" path="res://joystick/virtual_joystick.tscn" id="4_7titn"]
@@ -10,8 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://32btv876nlk6" path="res://pause.svg" id="7_mngyd"]
 [ext_resource type="Texture2D" uid="uid://db0kp35d4jsdp" path="res://speaker-mute.svg" id="8_ffcqt"]
 [ext_resource type="Texture2D" uid="uid://bd4l4txlppda6" path="res://back.svg" id="10_b6s37"]
-[ext_resource type="Script" path="res://InterstitialAd.gd" id="11_a81t3"]
-[ext_resource type="Script" path="res://Music.gd" id="12_nj8h1"]
+[ext_resource type="Script" uid="uid://ynlnukp4r44d" path="res://Music.gd" id="12_nj8h1"]
 [ext_resource type="AudioStream" uid="uid://ta00ym726n1f" path="res://sounds/melody.wav" id="13_e1ogb"]
 [ext_resource type="AudioStream" uid="uid://cpi4o6dryt4nm" path="res://sounds/drum-bass.wav" id="14_furow"]
 [ext_resource type="AudioStream" uid="uid://c2516enli8tbh" path="res://sounds/ambient.wav" id="15_wjfoq"]
@@ -55,11 +54,11 @@ expand_margin_bottom = 2.0
 [sub_resource type="Theme" id="Theme_a81xs"]
 HSlider/styles/slider = SubResource("StyleBoxFlat_b78kf")
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=1151399772]
 script = ExtResource("1_efij6")
 mob_scene = ExtResource("3_bcq41")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1570666254]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -69,13 +68,13 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.33, 0.33, 0.33, 1)
 
-[node name="Joystick" type="Control" parent="."]
+[node name="Joystick" type="Control" parent="." unique_id=1038696766]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="VirtualJoystick" parent="Joystick" instance=ExtResource("4_7titn")]
+[node name="VirtualJoystick" parent="Joystick" unique_id=605146795 instance=ExtResource("4_7titn")]
 layout_mode = 1
 anchors_preset = 0
 anchor_top = 0.0
@@ -88,15 +87,15 @@ pressed_color = Color(1, 1, 1, 1)
 clampzone_size = 90.0
 joystick_mode = 3
 
-[node name="Player" parent="." instance=ExtResource("2_nphoj")]
+[node name="Player" parent="." unique_id=1118825294 instance=ExtResource("2_nphoj")]
 visible = false
 
-[node name="MobTimer" type="Timer" parent="."]
+[node name="MobTimer" type="Timer" parent="." unique_id=1687456789]
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=875644434]
 visible = false
 
-[node name="ScoreLabel" type="Label" parent="HUD"]
+[node name="ScoreLabel" type="Label" parent="HUD" unique_id=155741040]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -109,7 +108,7 @@ text = "0"
 label_settings = SubResource("LabelSettings_gm1r5")
 horizontal_alignment = 1
 
-[node name="PauseButton" type="TextureButton" parent="HUD"]
+[node name="PauseButton" type="TextureButton" parent="HUD" unique_id=2051166392]
 offset_left = 83.0
 offset_top = 77.0
 offset_right = 833.0
@@ -118,9 +117,9 @@ scale = Vector2(0.055, 0.055)
 theme = ExtResource("5_yr6rn")
 texture_normal = ExtResource("7_mngyd")
 
-[node name="TitleScreen" type="CanvasLayer" parent="."]
+[node name="TitleScreen" type="CanvasLayer" parent="." unique_id=1411996089]
 
-[node name="StartButton" type="Button" parent="TitleScreen"]
+[node name="StartButton" type="Button" parent="TitleScreen" unique_id=1647481954]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -136,7 +135,7 @@ theme = ExtResource("5_yr6rn")
 text = "start	"
 alignment = 0
 
-[node name="Title" type="Label" parent="TitleScreen"]
+[node name="Title" type="Label" parent="TitleScreen" unique_id=259455629]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -151,7 +150,7 @@ grow_vertical = 2
 text = "mosion"
 label_settings = SubResource("LabelSettings_q6ifl")
 
-[node name="ExtraGlow" type="Label" parent="TitleScreen/Title"]
+[node name="ExtraGlow" type="Label" parent="TitleScreen/Title" unique_id=746660545]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -167,7 +166,7 @@ grow_vertical = 2
 text = "mosion"
 label_settings = SubResource("LabelSettings_w07ay")
 
-[node name="OptionsButton" type="Button" parent="TitleScreen"]
+[node name="OptionsButton" type="Button" parent="TitleScreen" unique_id=947603864]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -183,7 +182,7 @@ theme = ExtResource("5_yr6rn")
 text = "options	"
 alignment = 0
 
-[node name="MuteButton" type="TextureButton" parent="TitleScreen"]
+[node name="MuteButton" type="TextureButton" parent="TitleScreen" unique_id=1211847092]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -200,10 +199,10 @@ toggle_mode = true
 texture_normal = ExtResource("7_2jboq")
 texture_pressed = ExtResource("8_ffcqt")
 
-[node name="Pause" type="CanvasLayer" parent="."]
+[node name="Pause" type="CanvasLayer" parent="." unique_id=1928594218]
 visible = false
 
-[node name="ResumeButton" type="Button" parent="Pause"]
+[node name="ResumeButton" type="Button" parent="Pause" unique_id=802412922]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -219,7 +218,7 @@ theme = ExtResource("5_yr6rn")
 text = "resume"
 alignment = 0
 
-[node name="NewButton" type="Button" parent="Pause"]
+[node name="NewButton" type="Button" parent="Pause" unique_id=1335871292]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -235,7 +234,7 @@ theme = ExtResource("5_yr6rn")
 text = "start new game"
 alignment = 0
 
-[node name="ConfirmLabel" type="Label" parent="Pause"]
+[node name="ConfirmLabel" type="Label" parent="Pause" unique_id=1366305315]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -251,7 +250,7 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "are you sure?"
 
-[node name="YesButton" type="Button" parent="Pause"]
+[node name="YesButton" type="Button" parent="Pause" unique_id=1130392558]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -268,7 +267,7 @@ theme = ExtResource("5_yr6rn")
 text = "yes"
 alignment = 0
 
-[node name="NoButton" type="Button" parent="Pause"]
+[node name="NoButton" type="Button" parent="Pause" unique_id=600371202]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -285,7 +284,7 @@ theme = ExtResource("5_yr6rn")
 text = "no"
 alignment = 0
 
-[node name="OptionsButton" type="Button" parent="Pause"]
+[node name="OptionsButton" type="Button" parent="Pause" unique_id=909957957]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -301,7 +300,7 @@ theme = ExtResource("5_yr6rn")
 text = "options	"
 alignment = 0
 
-[node name="MuteButton" type="TextureButton" parent="Pause"]
+[node name="MuteButton" type="TextureButton" parent="Pause" unique_id=2013907062]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -318,10 +317,10 @@ toggle_mode = true
 texture_normal = ExtResource("7_2jboq")
 texture_pressed = ExtResource("8_ffcqt")
 
-[node name="GameOver" type="CanvasLayer" parent="."]
+[node name="GameOver" type="CanvasLayer" parent="." unique_id=2067533344]
 visible = false
 
-[node name="MainMenuButton" type="Button" parent="GameOver"]
+[node name="MainMenuButton" type="Button" parent="GameOver" unique_id=1387428430]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -337,7 +336,7 @@ theme = ExtResource("5_yr6rn")
 text = "main menu"
 alignment = 0
 
-[node name="AgainButton" type="Button" parent="GameOver"]
+[node name="AgainButton" type="Button" parent="GameOver" unique_id=1000595112]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -353,7 +352,7 @@ theme = ExtResource("5_yr6rn")
 text = "play again"
 alignment = 0
 
-[node name="HighScoreLabel" type="Label" parent="GameOver"]
+[node name="HighScoreLabel" type="Label" parent="GameOver" unique_id=767795688]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -368,7 +367,7 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "high score: "
 
-[node name="ScoreLabel" type="Label" parent="GameOver"]
+[node name="ScoreLabel" type="Label" parent="GameOver" unique_id=1796321109]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -383,10 +382,10 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "high score: "
 
-[node name="Options" type="CanvasLayer" parent="."]
+[node name="Options" type="CanvasLayer" parent="." unique_id=4715294]
 visible = false
 
-[node name="MuteButton" type="TextureButton" parent="Options"]
+[node name="MuteButton" type="TextureButton" parent="Options" unique_id=624944908]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -403,7 +402,7 @@ toggle_mode = true
 texture_normal = ExtResource("7_2jboq")
 texture_pressed = ExtResource("8_ffcqt")
 
-[node name="BackButton" type="TextureButton" parent="Options"]
+[node name="BackButton" type="TextureButton" parent="Options" unique_id=435320309]
 offset_left = 75.0
 offset_top = 73.0
 offset_right = 117.0
@@ -412,7 +411,7 @@ scale = Vector2(0.08, 0.08)
 theme = ExtResource("5_yr6rn")
 texture_normal = ExtResource("10_b6s37")
 
-[node name="EffectsLabel" type="Label" parent="Options"]
+[node name="EffectsLabel" type="Label" parent="Options" unique_id=1230950168]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -427,7 +426,7 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "sound effects	"
 
-[node name="MuteLabel" type="Label" parent="Options"]
+[node name="MuteLabel" type="Label" parent="Options" unique_id=1425443057]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -442,7 +441,7 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "mute"
 
-[node name="MusicLabel" type="Label" parent="Options"]
+[node name="MusicLabel" type="Label" parent="Options" unique_id=670337052]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -457,7 +456,7 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "music"
 
-[node name="ThemeLabel" type="Label" parent="Options"]
+[node name="ThemeLabel" type="Label" parent="Options" unique_id=1504204650]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -472,7 +471,7 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "theme"
 
-[node name="ThemeButton" type="LinkButton" parent="Options"]
+[node name="ThemeButton" type="LinkButton" parent="Options" unique_id=1332362035]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -487,7 +486,7 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "emosional"
 
-[node name="MusicSlider" type="HSlider" parent="Options"]
+[node name="MusicSlider" type="HSlider" parent="Options" unique_id=1963860544]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -503,7 +502,7 @@ scale = Vector2(1.5, 1.5)
 theme = SubResource("Theme_a81xs")
 value = 70.0
 
-[node name="EffectsSlider" type="HSlider" parent="Options"]
+[node name="EffectsSlider" type="HSlider" parent="Options" unique_id=560136419]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -519,7 +518,7 @@ scale = Vector2(1.5, 1.5)
 theme = SubResource("Theme_a81xs")
 value = 70.0
 
-[node name="ControlLabel" type="Label" parent="Options"]
+[node name="ControlLabel" type="Label" parent="Options" unique_id=1395844654]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -534,7 +533,7 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "control style"
 
-[node name="WASDLabel" type="Label" parent="Options"]
+[node name="WASDLabel" type="Label" parent="Options" unique_id=703099195]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -551,7 +550,7 @@ theme = ExtResource("5_yr6rn")
 theme_override_font_sizes/font_size = 26
 text = "(plus arrows, WASD)"
 
-[node name="ControlButton" type="LinkButton" parent="Options"]
+[node name="ControlButton" type="LinkButton" parent="Options" unique_id=1689343656]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -566,7 +565,7 @@ grow_vertical = 2
 theme = ExtResource("5_yr6rn")
 text = "follow"
 
-[node name="DebugText" type="Label" parent="."]
+[node name="DebugText" type="Label" parent="." unique_id=1483617525]
 visible = false
 offset_left = 60.0
 offset_top = 64.0
@@ -575,49 +574,19 @@ offset_bottom = 431.0
 text = "debug"
 autowrap_mode = 1
 
-[node name="InterstitialAd" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-script = ExtResource("11_a81t3")
-
-[node name="AdTimer" type="Timer" parent="InterstitialAd"]
-wait_time = 5.0
-one_shot = true
-
-[node name="Loading" type="CanvasLayer" parent="InterstitialAd"]
-visible = false
-
-[node name="LoadingLabel" type="Button" parent="InterstitialAd/Loading"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -290.0
-offset_top = 123.0
-offset_right = -56.0
-offset_bottom = 177.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("5_yr6rn")
-text = "loading...	"
-alignment = 0
-
-[node name="Music" type="Node" parent="."]
+[node name="Music" type="Node" parent="." unique_id=493357855]
 script = ExtResource("12_nj8h1")
 
-[node name="Melody" type="AudioStreamPlayer" parent="Music"]
+[node name="Melody" type="AudioStreamPlayer" parent="Music" unique_id=738390417]
 stream = ExtResource("13_e1ogb")
 volume_db = -40.0
 autoplay = true
 
-[node name="DrumBass" type="AudioStreamPlayer" parent="Music"]
+[node name="DrumBass" type="AudioStreamPlayer" parent="Music" unique_id=857230820]
 stream = ExtResource("14_furow")
 volume_db = -40.0
 
-[node name="Ambient" type="AudioStreamPlayer" parent="Music"]
+[node name="Ambient" type="AudioStreamPlayer" parent="Music" unique_id=1007859778]
 stream = ExtResource("15_wjfoq")
 volume_db = -40.0
 
@@ -642,5 +611,3 @@ volume_db = -40.0
 [connection signal="drag_ended" from="Options/MusicSlider" to="." method="_on_music_slider_drag_ended"]
 [connection signal="drag_ended" from="Options/EffectsSlider" to="." method="_on_effects_slider_drag_ended"]
 [connection signal="pressed" from="Options/ControlButton" to="." method="_on_control_button_pressed"]
-[connection signal="timeout" from="InterstitialAd/AdTimer" to="InterstitialAd" method="_on_ad_timer_timeout"]
-[connection signal="pressed" from="InterstitialAd/Loading/LoadingLabel" to="." method="_on_new_game_clicked"]

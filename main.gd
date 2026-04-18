@@ -68,7 +68,7 @@ var music_vol = 0.8
 var mute = false
 
 # ads
-var ad_free = false # either purchased or manual override
+var ad_free = true # either purchased or manual override
 var ad_load_timeout = 5.0
 var first_game = true
 
@@ -104,7 +104,7 @@ func _ready():
 		ad_free = true
 		$Options/ControlLabel.text = 'click controls'
 		$Options/WASDLabel.visible = true
-	MobileAds.initialize()
+	#MobileAds.initialize()
 	
 	# uncomment when creating a new icon
 	#draw_icon()
@@ -519,7 +519,7 @@ func score_string(score_num):
 	if score_num < 10:
 		score_str = str(snapped(score_num,0.1))
 	else:
-		score_str = str(round(score_num))
+		score_str = str(snapped(score_num, 1))
 		for i in range(score_str.length()-3, 0, -3):
 			score_str = score_str.insert(i, ",")
 	return score_str
@@ -535,4 +535,3 @@ func _on_main_menu_button_pressed():
 	$Pause.visible = false
 	$GameOver.visible = false
 	$TitleScreen.visible = true
-
